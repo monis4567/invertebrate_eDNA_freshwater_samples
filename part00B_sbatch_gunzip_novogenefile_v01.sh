@@ -3,10 +3,10 @@
 #SBATCH --partition=hologenomics 
 #SBATCH --mem 512M
 #SBATCH -c 1
-#SBATCH -t 3:00:00
-#SBATCH -J 00B_uncomp_raw
-#SBATCH -o stdout_00B_uncomp_raw.txt
-#SBATCH -e stderr_00B_uncomp_raw.txt
+#SBATCH -t 1:00:00
+#SBATCH -J 00B_gunzip_novogene
+#SBATCH -o stdout_00B_gunzip_novogene.txt
+#SBATCH -e stderr_00B_gunzip_novogene.txt
 
 #load modules required
 module purge
@@ -20,10 +20,10 @@ WD=$(pwd)
 
 
 RWzipF="X204SC22012323-Z01-F001.zip"
-# define input directory with 'fastq.gz' files 
-INDR1="00A_raw_zipped_fastq.gz_files"
-# define output directory where the  unzipped 'fastq.gz' files are to be placed 
-OUDR1="00B_raw_decompressed_fastq.gz_files"
+# define input directory with novogen file 
+INDR1="00A_raw_compressed_novogenefile"
+# define output directory where the  unzipped novogene files are to be placed 
+OUDR1="00B_raw_compressed_fastq.gz_files"
 
 rm -rf "${INDR1}" 
 mkdir "${INDR1}"

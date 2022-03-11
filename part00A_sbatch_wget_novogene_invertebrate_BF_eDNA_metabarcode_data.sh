@@ -4,9 +4,9 @@
 #SBATCH --mem 512M
 #SBATCH -c 1
 #SBATCH -t 24:00:00
-#SBATCH -J 00wget
-#SBATCH -o stdout_01_wget.txt
-#SBATCH -e stderr_01_wget.txt
+#SBATCH -J 00Awget
+#SBATCH -o stdout_00A_wget.txt
+#SBATCH -e stderr_00A_wget.txt
 
 
 wget https://englandaws-data1.s3-eu-west-1.amazonaws.com/out/CP2021121500088/X204SC22012323-Z01-F001/X204SC22012323-Z01-F001.zip
