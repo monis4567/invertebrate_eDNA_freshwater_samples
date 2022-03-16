@@ -153,9 +153,9 @@ for smp in ${SMPLARRAY[@]}
 printf "#!/bin/bash
 #SBATCH --account=hologenomics         # Project Account
 #SBATCH --partition=hologenomics 
-#SBATCH --mem 4G
-#SBATCH -c 1
-#SBATCH -t 4:00:00
+#SBATCH --mem 8G
+#SBATCH -c 4
+#SBATCH -t 24:00:00
 #SBATCH -J pa01B_demulti_b"${smp}"
 #SBATCH -o stdout_pa01B_demulplex_b"${smp}".txt
 #SBATCH -e stderr_pa01B_demulplex_b"${smp}".txt
@@ -279,8 +279,10 @@ Then execute:
   "
 
 #Line to use for cancelling multiple jobs
-#NJOBS=$(seq 30590490 30590959); for i in $NJOBS; do scancel $i; done
+#NJOBS=$(seq 30634673 30634680); for i in $NJOBS; do scancel $i; done
+
 #30584709 30585116
+#30624717 30624724
 #Line to use for checking how jobs perform
 #sacct | grep p04_bW | grep 48G | grep CANCE
 
