@@ -155,7 +155,7 @@ printf "#!/bin/bash
 #SBATCH --partition=hologenomics 
 #SBATCH --mem 8G
 #SBATCH -c 4
-#SBATCH -t 24:00:00
+#SBATCH -t 90:00:00
 #SBATCH -J pa01B_demulti_b"${smp}"
 #SBATCH -o stdout_pa01B_demulplex_b"${smp}".txt
 #SBATCH -e stderr_pa01B_demulplex_b"${smp}".txt
