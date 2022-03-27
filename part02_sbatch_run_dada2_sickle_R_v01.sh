@@ -1,9 +1,9 @@
 #!/bin/bash
 #SBATCH --account=hologenomics         # Project Account
 #SBATCH --partition=hologenomics 
-#SBATCH --mem 4G
-#SBATCH -c 1
-#SBATCH -t 4:00:00
+#SBATCH --mem 16G
+#SBATCH -c 8
+#SBATCH -t 48:00:00
 #SBATCH -J pa02_dada2_sickle_blibnumber
 #SBATCH -o stdout_pa02_sickle_blibnumber.txt
 #SBATCH -e stderr_pa02_sickle_blibnumber.txt
