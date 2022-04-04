@@ -47,10 +47,10 @@ for smp in ${SMPLARRAY[@]}
 	cp DADA2_nochim.otus "${PATH01}"/"${BDR}"/"${BL_BDR}"/.
 	# change dir
 	cd "${PATH01}"/"${BDR}"/"${BL_BDR}"
-	# split file into files that each holds 1000 lines (deafult setting)
-	# add a suffix number with 4 digits, and add a prefix defined by a variable
-	# also add an addiyional suffix labelled '.fas'
-	split -d --suffix-length=4 --additional-suffix=.fas DADA2_nochim.otus ""${smp}"_"
+	# split file into files that each holds 200 lines (deafult settings is 1000 lines per file)
+	# add a suffix number with 6 digits, and add a prefix defined by a variable
+	# also add an additional suffix labelled '.fas'
+	split -d --lines=200 --suffix-length=6 --additional-suffix=.fas DADA2_nochim.otus ""${smp}"_"
 	# make a list that holds the names of the fastq files
 	LS_SPL=$(ls *.fas)
 	#make the list of the split files to an array you can iterate over
@@ -67,7 +67,7 @@ for smp in ${SMPLARRAY[@]}
 printf "#!/bin/bash
 #SBATCH --account=hologenomics         # Project Account
 #SBATCH --partition=hologenomics 
-#SBATCH --mem 4G ### or try with 8G if 4G is not enough
+#SBATCH --mem 64G ### or try with 8G if 4G is not enough
 #SBATCH -c 1
 #SBATCH -t 1:00:00
 #SBATCH -J p04_"$splnm"
@@ -77,20 +77,10 @@ printf "#!/bin/bash
 #load modules required
 module purge
 
-# you can check what module is available with the command:
-# module avail
-# But if you know that you want to look for 'blast' then instead try:
-# module spider blast
-# This will tell you which of the remote applications has any similarity 
-# in naming with your search  
-
 # Load the correct module
 module load blast+/v2.8.1
 # The older versions of blast+ might not be able to perform the remote search operation. 
 # see this question : https://www.biostars.org/p/296360/
-#module load blast/v2.2.26
-
-##module load openmpi-gcc
 
 ###________________________________________________________________________________________________________________________
 ###  02.01 try a global blast search on less than 10 sequences - start
@@ -142,8 +132,6 @@ cat \"\${INPFNM1}\" > \"\${OUTFLN2}\"
 # Theses results are not very useful for further analysis, but it gave me an idea on how I can start with minor
 # tests of my input data, and what the outcome of this would be, and it allowed me to check how long time a different
 # number of sequences might take to analyse.
-# In the part below I have 
-
 
 # You can check the results file with the aid of the unix 'cut' command.
 # Like this:
@@ -211,7 +199,7 @@ done
 # remove previous version of output file
 
 #Line to use for cancelling multiple jobs
-#NJOBS=$(seq 31974253 31975401); for i in $NJOBS; do scancel $i; done
+#NJOBS=$(seq 31995489 31995491); for i in $NJOBS; do scancel $i; done
 #
 #
 #

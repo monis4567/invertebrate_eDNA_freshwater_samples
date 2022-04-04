@@ -207,8 +207,9 @@ If they all finish without errors, then proceed to part04<br/>
 
 ## part04
 part04 is for starting multiple parallel blast searches. Again as in part02 and part03 the idea is to iterate over the fastq files that have been demulitplexed and arranged in to tables.  <br/>
-Start out by locally removing any previous versions of tar compressed "part04.tar.gz". This can be removed with the command `rm part04.tar.gz`. Then locally compress all part04 related files with the tar command:  `tar -zcvf part04.tar.gz part04*`. Then transfer this "part04.tar.gz" to the remote HPC server, and uncompress it on the remote server. Then run the part04A code by executing it directly in the remote HPC terminal. This will start part04B. Which will prepare a lot of slurmsubmission files, that each starts multiple parallel blast searches. One for each fastq demultiplexed sequence set.<br/>
-Inspect how the resulting "stderr" and "stdout" performs. Check the contents of these files. Also check if the slurm submission jobs ends up being cancelled. The most likely reason for these jobs to end up being cancelled is that they need more RAM memory to be able to perform the blast search. One immediate solution is then to adjust the line '#SBATCH --mem 16G ' in the part04B file. Increase the '--mem 16G' to '--mem 32G' or perhaps to '--mem 124G', and then reinspect the resulting "stderr" and "stdout" and their contents.<br/>
+Transfer th part04A to the remote server. Start a tmux screen, and execute this part04A script. Exit the tmux screen. 
+
+
 
 
 
