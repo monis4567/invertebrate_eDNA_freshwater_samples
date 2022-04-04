@@ -11,6 +11,16 @@ OUDIR01="01_demultiplex_filtered"
 #define path for b_library numbers
 PATH01=$(echo ""${REMDIR}"/"${OUDIR01}"")
 
+#define list with Positive control mock species
+PCL="part05_lst_species_in_PCmock.txt"
+#define list with species known in the habitat
+SPL="part05_lst_species_of_marine_fish_in_DK.txt"
+#define output list file name
+OUL="part05_lst_species_of_fish_in_DK_and_PCMock.txt"
+#concatenate the list files in to one list
+cat "${SPL}" "${PCL}" > "${OUL}"
+#compress the list of species files
+zip part05_lst_species.zip part05_lst_species*
 # #prepare paths to files, and make a line with primer set and number of nucleotide overlap between paired end sequencing
 # Iteration loop over b library numbers
 # to prepare slurm submission scripts for each b library number
@@ -35,13 +45,23 @@ for smp in ${SMPLARRAY[@]}
 	#echo $fn
 	#make a directory name for the NGS library
 	BDR=$(echo ""${smp}"")
-	
-	#also replace in the slurm submission script
-	cat part04_run_02blast_global_v01.sh | \
+	# write the contents with cat
+	cat part05_limitBLASTresults_before_taxonomyB_v01.r | \
 	# and use sed to replace a txt string w the b library number
 	# replace "blibrarynumber"
-	sed "s/blibnumber/"${smp}"/g" > "${PATH01}"/"${BDR}"/part04_run_02blast_global_v01_"${smp}".sh
-	
+	sed "s/blibnumber/"${smp}"/g" > "${PATH01}"/"${BDR}"/part05_limitBLASTresults_before_taxonomyB_v01_"${smp}".r
+	#character modify the r code to make it possible to execute the file
+	chmod 755 "${PATH01}"/"${BDR}"/part05_limitBLASTresults_before_taxonomyB_v01_"${smp}".r
+
+	#also replace in the slurm submission script
+	cat part05_sbatch_run_limBLAST_v01.sh | \
+	# and use sed to replace a txt string w the b library number
+	# replace "blibrarynumber"
+	sed "s/blibnumber/"${smp}"/g" > "${PATH01}"/"${BDR}"/part05_sbatch_run_limBLAST_v01_"${smp}".sh
+	# remove any previous versions of the list of species
+	rm "${PATH01}"/"${BDR}"/part05_lst_species*
+	#copy the zipped file with list of species
+	cp part05_lst_species.zip "${PATH01}"/"${BDR}"/.
 # end iteration over sequence of numbers	
 done
 
@@ -49,26 +69,24 @@ done
 # to prepare slurm submission scripts for each b library number
 #iterate over sequence of numbers
 # but pad the number with zeroes: https://stackoverflow.com/questions/8789729/how-to-zero-pad-a-sequence-of-integers-in-bash-so-that-all-have-the-same-width
-
 #iterate over samples
 for smp in ${SMPLARRAY[@]}
  	do	
 	#echo $fn
 	#make a directory name for the NGS library
 	BDR=$(echo ""${smp}"")
-	
 	# change directory to the subdirectory
 	cd "${PATH01}"/"${BDR}"
+	#uncompress the lists with species
+	unzip part05_lst_species.zip
 	# start the slurm sbatch code
-	sbatch part04_run_02blast_global_v01_"${smp}".sh
+	sbatch part05_sbatch_run_limBLAST_v01_"${smp}".sh
 	# change directory to the working directory
 	cd "${WD}"
 # end iteration over sequence of numbers	
 done
 
 
-#Line to use for cancelling multiple jobs
-#NJOBS=$(seq 30959042 30959048); for i in $NJOBS; do scancel $i; done
 #
 #
 #
