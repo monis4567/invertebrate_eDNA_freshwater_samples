@@ -50,7 +50,7 @@ for smp in ${SMPLARRAY[@]}
 	# split file into files that each holds 200 lines (deafult settings is 1000 lines per file)
 	# add a suffix number with 6 digits, and add a prefix defined by a variable
 	# also add an additional suffix labelled '.fas'
-	split -d --lines=200 --suffix-length=6 --additional-suffix=.fas DADA2_nochim.otus ""${smp}"_"
+	split -d --lines=100 --suffix-length=6 --additional-suffix=.fas DADA2_nochim.otus ""${smp}"_"
 	# make a list that holds the names of the fastq files
 	LS_SPL=$(ls *.fas)
 	#make the list of the split files to an array you can iterate over
@@ -67,7 +67,7 @@ for smp in ${SMPLARRAY[@]}
 printf "#!/bin/bash
 #SBATCH --account=hologenomics         # Project Account
 #SBATCH --partition=hologenomics 
-#SBATCH --mem 64G ### or try with 8G if 4G is not enough
+#SBATCH --mem 128G ### or try with 8G if 4G is not enough
 #SBATCH -c 1
 #SBATCH -t 1:00:00
 #SBATCH -J p04_"$splnm"
@@ -199,7 +199,7 @@ done
 # remove previous version of output file
 
 #Line to use for cancelling multiple jobs
-#NJOBS=$(seq 31995489 31995491); for i in $NJOBS; do scancel $i; done
+#NJOBS=$(seq 32002416 32007629); for i in $NJOBS; do scancel $i; done
 #
 #
 #
