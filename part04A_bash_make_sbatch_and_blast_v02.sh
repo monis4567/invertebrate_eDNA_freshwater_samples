@@ -199,7 +199,10 @@ done
 # remove previous version of output file
 
 #Line to use for cancelling multiple jobs
-#NJOBS=$(seq 32002416 32007629); for i in $NJOBS; do scancel $i; done
+#NJOBS=$(seq 32010042 32021875); for i in $NJOBS; do scancel $i; done
+
+#87350
+
 #
 #
 #
