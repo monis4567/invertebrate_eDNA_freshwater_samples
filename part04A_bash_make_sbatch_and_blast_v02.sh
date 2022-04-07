@@ -7,7 +7,8 @@ WD=$(pwd)
 REMDIR="${WD}"
 #define input directory
 OUDIR01="01_demultiplex_filtered"
-
+# define path to local database
+LOCALDB="/groups/hologenomics/data/db/blast/nt"
 #define path for b_library numbers
 PATH01=$(echo ""${REMDIR}"/"${OUDIR01}"")
 
@@ -50,7 +51,7 @@ for smp in ${SMPLARRAY[@]}
 	# split file into files that each holds 200 lines (deafult settings is 1000 lines per file)
 	# add a suffix number with 6 digits, and add a prefix defined by a variable
 	# also add an additional suffix labelled '.fas'
-	split -d --lines=100 --suffix-length=6 --additional-suffix=.fas DADA2_nochim.otus ""${smp}"_"
+	split -d --lines=10000 --suffix-length=6 --additional-suffix=.fas DADA2_nochim.otus ""${smp}"_"
 	# make a list that holds the names of the fastq files
 	LS_SPL=$(ls *.fas)
 	#make the list of the split files to an array you can iterate over
@@ -67,7 +68,7 @@ for smp in ${SMPLARRAY[@]}
 printf "#!/bin/bash
 #SBATCH --account=hologenomics         # Project Account
 #SBATCH --partition=hologenomics 
-#SBATCH --mem 128G ### or try with 8G if 4G is not enough
+#SBATCH --mem 32G ### or try with 8G if 4G is not enough
 #SBATCH -c 1
 #SBATCH -t 1:00:00
 #SBATCH -J p04_"$splnm"
@@ -77,8 +78,13 @@ printf "#!/bin/bash
 #load modules required
 module purge
 
-# Load the correct module
-module load blast+/v2.8.1
+## Load the correct module
+# module load blast+/v2.8.1
+## Load perl before loading blast
+module load perl/v5.28.1
+#module load perl/v5.32.0
+module load blast+/v2.12.0
+
 # The older versions of blast+ might not be able to perform the remote search operation. 
 # see this question : https://www.biostars.org/p/296360/
 
@@ -166,7 +172,10 @@ cat \"\${INPFNM1}\" > \"\${OUTFLN2}\"
 ###  02.02 try a global blast search on all sequences in the 'nochim' file - start
 ###________________________________________________________________________________________________________________________
 
-blastn -db nt -max_target_seqs 500 -outfmt \"6 std qlen qcovs sgi sseq ssciname staxid\" -out \"\${OUTFLN1}\" -qcov_hsp_perc 90 -perc_identity 80 -query \"\${INPFNM1}\"
+#blastn -db nt -max_target_seqs 500 -outfmt \"6 std qlen qcovs sgi sseq ssciname staxid\" -out \"\${OUTFLN1}\" -qcov_hsp_perc 90 -perc_identity 80 -query \"\${INPFNM1}\"
+blastn -db "${LOCALDB}" -max_target_seqs 500 -outfmt \"6 std qlen qcovs sgi sseq ssciname staxid\" -out \"\${OUTFLN1}\" -qcov_hsp_perc 90 -perc_identity 80 -query \"\${INPFNM1}\"
+blastn -db "${LOCALDB}" -max_target_seqs 400 -outfmt \"6 std qlen qcovs sgi sseq ssciname staxid\" -out \"\${OUTFLN1}\" -qcov_hsp_perc 90 -perc_identity 80 -query \"\${INPFNM1}\"
+
 
 ###________________________________________________________________________________________________________________________
 ###  02.02 try a global blast search on all sequences in the 'nochim' file - end
@@ -199,7 +208,7 @@ done
 # remove previous version of output file
 
 #Line to use for cancelling multiple jobs
-#NJOBS=$(seq 32010042 32021875); for i in $NJOBS; do scancel $i; done
+#NJOBS=$(seq 32072980 32073748); for i in $NJOBS; do scancel $i; done
 
 #87350
 
