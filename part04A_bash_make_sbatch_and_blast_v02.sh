@@ -48,10 +48,10 @@ for smp in ${SMPLARRAY[@]}
 	cp DADA2_nochim.otus "${PATH01}"/"${BDR}"/"${BL_BDR}"/.
 	# change dir
 	cd "${PATH01}"/"${BDR}"/"${BL_BDR}"
-	# split file into files that each holds 10000 lines (deafult settings is 1000 lines per file)
+	# split file into files that each holds 1000 lines (deafult settings is 1000 lines per file)
 	# add a suffix number with 6 digits, and add a prefix defined by a variable
 	# also add an additional suffix labelled '.fas'
-	split -d --lines=10000 --suffix-length=6 --additional-suffix=.fas DADA2_nochim.otus ""${smp}"_"
+	split -d --lines=1000 --suffix-length=6 --additional-suffix=.fas DADA2_nochim.otus ""${smp}"_"
 	# make a list that holds the names of the fastq files
 	LS_SPL=$(ls *.fas)
 	#make the list of the split files to an array you can iterate over
@@ -68,7 +68,7 @@ for smp in ${SMPLARRAY[@]}
 printf "#!/bin/bash
 #SBATCH --account=hologenomics         # Project Account
 #SBATCH --partition=hologenomics 
-#SBATCH --mem 32G ### or try with 8G if 4G is not enough
+#SBATCH --mem 64G ### or try with 8G if 4G is not enough
 #SBATCH -c 1
 #SBATCH -t 1:00:00
 #SBATCH -J p04_"$splnm"
@@ -208,7 +208,7 @@ done
 # remove previous version of output file
 
 #Line to use for cancelling multiple jobs
-#NJOBS=$(seq 32072980 32073748); for i in $NJOBS; do scancel $i; done
+#NJOBS=$(seq 32076605 32076869); for i in $NJOBS; do scancel $i; done
 
 #87350
 
