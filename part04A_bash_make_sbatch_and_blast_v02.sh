@@ -68,7 +68,7 @@ for smp in ${SMPLARRAY[@]}
 printf "#!/bin/bash
 #SBATCH --account=hologenomics         # Project Account
 #SBATCH --partition=hologenomics 
-#SBATCH --mem 32G ### or try with 8G if 4G is not enough
+#SBATCH --mem 128G ### or try with 8G if 4G is not enough
 #SBATCH -c 1
 #SBATCH -t 1:00:00
 #SBATCH -J p04_"$splnm"
@@ -173,8 +173,8 @@ cat \"\${INPFNM1}\" > \"\${OUTFLN2}\"
 ###________________________________________________________________________________________________________________________
 
 #blastn -db nt -max_target_seqs 500 -outfmt \"6 std qlen qcovs sgi sseq ssciname staxid\" -out \"\${OUTFLN1}\" -qcov_hsp_perc 90 -perc_identity 80 -query \"\${INPFNM1}\"
-blastn -db "${LOCALDB}" -max_target_seqs 500 -outfmt \"6 std qlen qcovs sgi sseq ssciname staxid\" -out \"\${OUTFLN1}\" -qcov_hsp_perc 90 -perc_identity 80 -query \"\${INPFNM1}\"
-blastn -db "${LOCALDB}" -max_target_seqs 400 -outfmt \"6 std qlen qcovs sgi sseq ssciname staxid\" -out \"\${OUTFLN1}\" -qcov_hsp_perc 90 -perc_identity 80 -query \"\${INPFNM1}\"
+##blastn -db "${LOCALDB}" -max_target_seqs 500 -outfmt \"6 std qlen qcovs sgi sseq ssciname staxid\" -out \"\${OUTFLN1}\" -qcov_hsp_perc 90 -perc_identity 80 -query \"\${INPFNM1}\"
+blastn -db "${LOCALDB}" -max_target_seqs 200 -outfmt \"6 std qlen qcovs sgi sseq ssciname staxid\" -out \"\${OUTFLN1}\" -qcov_hsp_perc 90 -perc_identity 80 -query \"\${INPFNM1}\"
 
 
 ###________________________________________________________________________________________________________________________
@@ -208,7 +208,7 @@ done
 # remove previous version of output file
 
 #Line to use for cancelling multiple jobs
-#NJOBS=$(seq 32077601 32078853); for i in $NJOBS; do scancel $i; done
+#NJOBS=$(seq 32084277 32085494); for i in $NJOBS; do scancel $i; done
 
 #87350
 
