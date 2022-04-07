@@ -207,7 +207,7 @@ If they all finish without errors, then proceed to part04<br/>
 
 ## part04
 part04 is for starting multiple parallel blast searches. Again as in part02 and part03 the idea is to iterate over the fastq files that have been demulitplexed and arranged in to tables.  <br/>
-Transfer th part04A to the remote server. Start a tmux screen, and execute this part04A script. Exit the tmux screen. Keep an eye on how the jobs perform. They might require more time and more RAM memory.
+Transfer th part04A to the remote server. Start a tmux screen, and execute this part04A script. Exit the tmux screen. Look up tmux and unix on the internet to get advice on how tmux  works. Keep an eye on how the jobs perform. They might require more time and more RAM memory.
 
 
 
