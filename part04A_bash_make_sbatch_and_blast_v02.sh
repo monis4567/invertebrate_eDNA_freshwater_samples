@@ -48,7 +48,7 @@ for smp in ${SMPLARRAY[@]}
 	cp DADA2_nochim.otus "${PATH01}"/"${BDR}"/"${BL_BDR}"/.
 	# change dir
 	cd "${PATH01}"/"${BDR}"/"${BL_BDR}"
-	# split file into files that each holds 200 lines (deafult settings is 1000 lines per file)
+	# split file into files that each holds 10000 lines (deafult settings is 1000 lines per file)
 	# add a suffix number with 6 digits, and add a prefix defined by a variable
 	# also add an additional suffix labelled '.fas'
 	split -d --lines=10000 --suffix-length=6 --additional-suffix=.fas DADA2_nochim.otus ""${smp}"_"
