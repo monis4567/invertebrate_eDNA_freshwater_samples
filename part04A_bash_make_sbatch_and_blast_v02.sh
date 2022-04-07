@@ -68,7 +68,7 @@ for smp in ${SMPLARRAY[@]}
 printf "#!/bin/bash
 #SBATCH --account=hologenomics         # Project Account
 #SBATCH --partition=hologenomics 
-#SBATCH --mem 64G ### or try with 8G if 4G is not enough
+#SBATCH --mem 32G ### or try with 8G if 4G is not enough
 #SBATCH -c 1
 #SBATCH -t 1:00:00
 #SBATCH -J p04_"$splnm"
@@ -208,7 +208,7 @@ done
 # remove previous version of output file
 
 #Line to use for cancelling multiple jobs
-#NJOBS=$(seq 32076605 32076869); for i in $NJOBS; do scancel $i; done
+#NJOBS=$(seq 32077601 32078853); for i in $NJOBS; do scancel $i; done
 
 #87350
 
