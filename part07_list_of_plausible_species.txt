@@ -1,0 +1,590 @@
+Haliplus
+Microtendipes
+Potamopyrgus antipodarum
+Asellus aquaticus
+Erpobdella octoculata
+Radix balthica
+Gammarus lacustris
+Gammarus pulex
+Glossiphonia complanata
+Naididae
+Tubificidae
+Hemiclipsis marginata
+Ostracoda
+Elmis aenea
+Sialis lutaria
+Athripsodes aterrimus
+Limnephilus rhombicus
+Ceratopogonidae
+Procladius
+Bithynia tentaculata
+Physa fontinalis
+Pisidium
+Sphaerium corneum
+Lumbriculus variegatus
+Apsectrotanypus trifascipennis
+Macropelopia
+Micropsectra
+Sigara
+Limnephilus extricatus
+Colymbetinae
+Tipula
+Lymnaea stagnalis
+Planorbarius corneus
+Helobdella stagnalis
+Hydracarina
+Polypedilum
+Limnephilidae
+Limnephilus lunatus
+Orthocladius
+Chaetopteryx villosa
+Nebrioporus depressus
+Dugesia
+Polycelis
+Anabolia furcata
+Stylaria lacustris
+Dicrotendipes
+Cloeon dipterum
+Hesperocorixa sahlbergi
+Chironomus riparius
+Corixa punctata
+Eiseniella tetraedra
+Rheocricotopus fuscipes
+Conchapelopia
+Prodiamesa olivacea
+Orthocladiinae
+Chironomini
+Nematoda
+Sigara falleni
+Psychoda
+Stagnicola palustris
+Anisus vortex
+Valvata macrostoma
+Dendrocoelum lacteum
+Erpobdella
+Halesus radiatus
+Simulium erythrocephalum
+Simulium lundstromi
+Simulium 
+Molanna angustata
+Planorbis planorbis
+Notonecta glauca
+Sigara striata
+Chaoborus flavicans
+Limnephilus flavicornis
+Thinemannimyia
+Theromyzon tessulatum
+Cladotanytarsus
+Sigara distincta
+Valvata cristata
+Coenagrionidae
+Paratendipes
+Valvata piscinalis
+Tanytarsini
+Glyphotaelius pellucidus
+Cloeon inscriptum
+Eloeophila
+Bathyomphalus contortus
+Lumbricidae
+Rheotanytarsus
+Goera pilosa
+Cryptochironomus
+Baetis
+Nemoura cinerea
+Velia caprai
+Baetis rhodani
+Pilaria
+Glossiphonia concolor
+Phagocata vitta
+Gyraulus albus
+Hydroporus
+Simulium vernum
+Anatopynia plumipes
+Pseudolimnophila
+Dicranota
+Tvetenia verralli
+Diplocladius cultriger
+Corynoneura
+Athripsodes cinereus
+Baetis vernus
+Stylodrilus heringianus
+Tanypodinae
+Bezzia
+Limnephilus marmoratus
+Sphaerium
+Bezzia
+Polypedilum nubeculosum
+Callicorixa praeusta
+Clinotanypus nervosus
+Simulium angustipes
+Mystacides
+Brillia bifida
+Elodes minuta
+Mystacides longicornis
+Chaoborus crystallinus
+Copepoda
+Pisidium amnicum
+Culicoides
+Brillia
+Prodiamesa
+Odontomyia
+Plea leachi
+Limnephilus
+Erpobdella testacea
+Hydra
+Thienemanniella
+Chaetocladius
+Hydrophilidae
+Planorbis carinatus
+Macropelopia nebulosa
+Gammarus
+Simuliidae
+Corixidae
+Notonecta
+Tipulidae
+Planorbidae
+Glossiphonia
+Helobdella
+Plectrocnemia conspersa
+Agabus paludosus
+Hydropsyche siltalai
+Limnophila
+Pericoma
+Micropterna sequax
+Eukiefferiella
+Simulium 
+Simulium ornatum
+Diamesa insignipes
+Nematocera
+Gyrinus substriatus
+Tipula maxima
+Scarodytes halensis
+Hydrobius fuscipes
+Paracladopelma nigritula
+Agabus
+Gyrinus
+Hydropsyche angustipennis
+Muscidae
+Tinodes pallidulus
+Polypedilum scalaenum
+Rheocricotopus
+Polypedilum laetum-agg.
+Ptychoptera lacustris
+Anacaena
+Zavrelimyia barbatipes
+Simulium trifasciatum
+Elodes minuta
+Anacaena globulus
+Neolimnomyia
+Oxycera
+Simulium vernum
+Rhyacophila fasciata
+Micropterna
+Lymnaea
+Oligochaeta
+Rhyacophila
+Hydropsyche
+Polycentropodidae
+Limoniidae
+Chironomidae
+Turbellaria
+Heterotrissocladius marcidus
+Cataclysta lemnata
+Pentaneurini
+Limnephilus bipunctatus
+Austrolimnophila
+Ptychoptera paludosa
+Hemerodromia
+Silo nigricornis
+Polycelis nigra
+Halesus
+Gerris
+Conchapelopia melanops
+Orthocladius thienemanni
+Enchytraeidae
+Psectrotanypus varius
+Endochironomus
+Ilybius fuliginosus
+Dytiscidae
+Agabus didymus
+Helophorus
+Ochthebius
+Tvetenia
+Odontomesa fulva
+Hydraena gracilis
+Polycelis tenuis
+Pedicia
+Segmentina nitida
+Nemoura
+Hexatominae
+Wiedemannia
+Lumbriculidae
+Leptophlebia
+Cymatia
+Noterus
+Dugesia lugubris
+Arachnida
+Planaria torva
+Simulium
+Coenagrion
+Velia
+Stagnicola glabra
+Empididae
+Hirudo medicinalis
+Polypedilum laetum
+Nepa cinerea
+Ptychoptera
+Lype reducta
+Tabanidae
+Stratiomys
+Dina lineata
+Haemopis sanguisuga
+Nemurella picteti
+Tabanus
+Pedicia rivosa
+Monopelopia tenuicalcar
+Molophilus
+Dixa maculata
+Simulium angustitarse
+Tricladida
+Beraeodes minutus
+Heteroptera
+Piscicola geometra
+Micronecta
+Caenis
+Beraeidae
+Coleoptera
+Bithynia leachi
+Sialis
+Leptoceridae
+Notidobia ciliaris
+Psychomyidae
+Spongilla
+Limnophora 
+Sisyra
+Unionicola crassipes
+Ischnura
+Hexatoma
+Anopheles
+Hydraena
+Cyclops
+Ephydatia
+Anodonta cygnaea
+Odonata
+Molanna
+Holocentropus
+Cyrnus trimaculatus
+Acroloxus lacustris
+Caenis horaria
+Glossiphonia heteroclita
+Chironomus
+Cloeon
+Cricotopus
+Glyptotendipes
+Cyrnus
+Ablabesmyia
+Ostracoda
+Nematomorpha
+Oxycera trilineata
+Lepidoptera
+Dreissena polymorpha
+Caenis robusta
+Ceraclea senilis
+Cyrnus flavidus
+Holocentropus picicornis
+Endochironomus albipennis
+Tanytarsus
+Brachycera
+Aeshna mixta
+Ceraclea
+Ormosia
+Hippeutis complanatus
+Zygoptera
+Baetidae
+Bithynia
+Hydropsychidae
+Parapoynx stratiotata
+Erythromma najas
+Caenis luctuosa
+Phryganea grandis
+Potthastia longimana
+Helophorus aequalis
+Demicryptochironomus vulneratus
+Dolichopodidae
+Uncinais uncinata
+Cyclorrhapha
+Nanocladius
+Potamophylax latipennis
+Gyraulus laevis
+Potamophylax
+Calopteryx splendens
+Hydroptila sparsa
+Limnophora riparia
+Athripsodes
+Lepidostoma hirtum
+Rhabdocoela
+Porifera
+Brachyptera risi
+Laccophilus hyalinus
+Polycentropus flavomaculatus
+Limnodrilus
+Lype phaeopa
+Centroptilum luteolum
+Gnophomyia lugubris
+Limnephilus fuscicornis
+Goeridae
+Aedes
+Parametriocnemus stylatus
+Oulimnius tuberculatus
+Limnephilus affinis
+Calopteryx
+Limnius volckmari
+Synorthocladius semivirens
+Oulimnius
+Paracorixa concinna
+Culex
+Simulium noelleri
+Neureclipsis bimaculata
+Astacus astacus
+Hydroptila
+Elophila nymphaeata
+Ironoquia dubia
+Grammotaulius nigropunctatus
+Anacaena limbata
+Anacaena lutescens
+Micropterna lateralis
+Laccophilinae
+Tricyphona
+Limnephilus ignavus
+Galba truncatula
+Limnephilus auricula
+Limnebius
+Chironomus plumosus
+Ptychoptera contaminata
+Laccophilus
+Haliplus lineatocollis
+Ula sylvatica
+Sciomyzidae
+Diamesa
+Gerris lacustris
+Hydroporinae
+Stratiomyidae
+Chelifera
+Succinea
+Elodes
+Hygrotus inaequalis
+Sigara fossarum
+Libellula
+Deronectes latus
+Phryganeidae
+Helodidae
+Haliplus ruficollis
+Einfeldia
+Aeshna cyanea
+Rhantus frontalis
+Molannidae
+Viviparus
+Tvetenia discoloripes
+Orthocladius 
+Dytiscus
+Nais elinguis
+Clinocera
+Simulium cryophilum
+Hydroporus palustris
+Nemotelus
+Cyphon
+Procloeon bifidum
+Sericostomatidae
+Hyphydrus ovatus
+Rhynchelmis limosella
+Tinodes waeneri
+Colymbetes fuscus
+Gastropoda
+Physella acuta
+Orthocladius frigidus
+Endochironomus dispar
+Paratanytarsus
+Gammarus duebeni
+Dugesia gonocephala
+Gammarus zaddachi
+Tanysphyrus lemnae
+Pilaria discicollis
+Psychodidae
+Hydroporus incognitus
+Stratiomys longicornis
+Chironominae
+Laccobius
+Simulium equinum
+Orectochilus villosus
+Hydropsyche pellucidula
+Ancylus fluviatilis
+Theodoxus fluviatilis
+Orthocladius rivulorum
+Ephemera vulgata
+Polycentropus irroratus
+Athripsodes albifrons
+Simulium posticatum
+Hydraena riparia
+Hydraena nigrita
+Hydraena britteni
+Polycentropus
+Gyrinidae
+Slavina appendiculata
+Platambus maculatus
+Hexatomini
+Donacia
+Diamesinae
+Tanaidacea
+Potamophylax rotundipennis
+Gyrinus caspius
+Endochironomus tendens
+Potamophylax cingulatus
+Sericostoma personatum
+Anisus leucostomus
+Leptocerus tineiformis
+Ephemera danica
+Paracladopelma
+Culiseta
+Chaetogaster
+Berdeniella freyi
+Serratella ignita
+Mystacides azurea
+Lype
+Brachycentridae
+Ephydridae
+Lepidostomatidae
+Gyraulus crista
+Gerris odontogaster
+Erioptera
+Metriocnemus
+Acilius canaliculatus
+Scleroprocta
+Berdeniella
+Hydrobia
+Agapetus fuscipes
+Silo pallipes
+Tinodes
+Eriopterini
+Ceraclea annulicornis
+Ceraclea nigronervosa
+Sigara lateralis
+Unio pictorum
+Agrypnia obsoleta
+Unio tumidus
+Limnephilus binotatus
+Calopteryx virgo
+Pyrrhosoma nymphula
+Hygrotus
+Isoperla grammatica
+Scirtes
+Planorbis
+Silo
+Aplexa hypnorum
+Leuctra
+Anabolia
+Peloscolex
+Ceratopogon vermiformis
+Isoperla
+Capnia bifrons
+Leuctra fusca
+Anisus
+Chrysogaster
+Culicidae
+Hydrochus
+Noterus crassicornis
+Haliplus confinis
+Satchelliella
+Chrysops
+Pyralidae
+Epoicocladius ephemerae
+Dryops
+Chrysophilus auratus
+Cladocera
+Paratendipes albimanus
+Paratrichocladius rufiventris
+Orthocladius obumbratus
+Scatophagidae
+Brachytron pratense
+Hydroptilidae
+Eukiefferiella brevicalcar
+Simulium rostratum
+Simulium latipes
+Clytocerus ocellaris
+Chaetarthria seminulum
+Cladocera
+Nemertini
+Brachyptera
+Acroloxus
+Siphlonurus aestivalis
+Callicorixa
+Ilybius
+Ilybius ater
+Stenophylax permistus
+Cymbiodyta marginella
+Gyraulus
+Stylodrilus
+Elodes marginata
+Tipula lateralis
+Goera
+Haliplidae
+Diptera
+Syrphidae
+Phryganea
+Cricotopus bicinctus
+Rheotanytarsus curtistylus
+Elmis
+Beris
+Forcipomyia
+Micropsectra notescens
+Haplotaxis gordioides
+Aedes annulipes
+Ochthebius dilatatus
+Chaoborus
+Argulus foliaceus
+Tubifex ignotus
+Phaenopsectra
+Micropsectra atrofasciata
+Nanocladius rectinervis
+Gordius aquaticus
+Euphylidorea lineola
+Agabus undulatus
+Hydroporus erythrocephalus
+Enochrus bicolor
+Helophorus flavipes
+Simulium costatum
+Helochares
+Cercyon tristis
+Tanytarsus usmaensis
+Orthocladius glabripennis
+Zonitoides nitidus
+Nebrioporus
+Rhypholophus
+Eristalis
+Hydroporus nigrita
+Xenopelopia
+Rhantus
+Colymbetes
+Haliplus furcatus
+Procladius choreus
+Hygrotus versicolor
+Libellula depressa
+Helophorus minutus
+Hydrochara caraboides
+Limnephilus vittatus
+Haliplus variegatus
+Dytiscus marginalis
+Agabus nebulosus
+Colpotaulius incisus
+Propappus volki
+Micropsectra recurvata
+Agabus guttatus
+Agabus neglectus
+Psectrocladius sordidellus
+Haliplus laminatus
+Somatochlora metallica
+Polypedilum bicrenatum
+Peltodytes caesus
+Haliplus fulvus
+Ischnura elegans
+Corixa
+Notonecta maculata
