@@ -11,6 +11,10 @@ library(readxl)
 library(dplyr)
 # define working directory
 wd00 <- "/home/hal9000/Documents/shrfldubuntu18/invertebrate_eDNA_freshwater_samples"
+wdin01 <- "/home/hal9000/Documents/shrfldubuntu18/metabarflow01"
+# The 'wdin01' is a separate side directory and not a part of the github directory.
+# This is to avoid the input files are stored inside the github directory
+# The path above can be changed if it is preferable to have input files somewhere else
 #setwd(wd00)
 # define input file
 inf01 <- "part07_table_plausible_species.csv"
@@ -18,8 +22,8 @@ inf02 <- "classified.txt"
 inf03 <- "DADA2_nochim.table_repl1.txt"
 # paste together path and input file
 pthinf01 <- paste0(wd00,"/",inf01)
-pthinf02 <- paste0(wd00,"/",inf02)
-pthinf03 <- paste0(wd00,"/",inf03)
+pthinf02 <- paste0(wdin01,"/",inf02)
+pthinf03 <- paste0(wdin01,"/",inf03)
 # read in files
 df_p01 <- read.csv(pthinf01, header = T)
 df_c01 <- read.table(pthinf02, sep="\t",header = T)
@@ -144,7 +148,7 @@ stbp07 <- ggplot(tibl06,aes(smplNo,seqrd.cnt  ,fill = phylum))+
   #facet_grid(.~MSTNo) +
   coord_cartesian(expand=F)
 # see the plot
-stbp07
+#stbp07
 
 
 #plot_annotation(caption=inpf01) #& theme(legend.position = "bottom")
