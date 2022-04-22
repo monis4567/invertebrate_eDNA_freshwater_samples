@@ -91,9 +91,11 @@ tibl_nonoch04 <- df_nonoch04 %>%
 # make viridis colour range
 vclr <- pals::viridis(length(unique(df_noch04$pcofg)))
 
-#add back the total count of reads for sample site per primerset
-# calculated in the tibble
+#add back the total count of reads for sample site
+# calculated in the tibble - for the plausible species
 df_noch04$totrcnt <- tibl_04$Freq[match(df_noch04$smplNo,tibl_04$smplNo)]
+# and do it for  the non- plausible species
+df_nonoch04$totrcnt <- tibl_nonoch04$Freq[match(df_nonoch04$smplNo,tibl_nonoch04$smplNo)]
 #arrrange tibble
 tibl06 <- df_noch04 %>% group_by(species, smplNo) 
 
@@ -110,7 +112,7 @@ tibl06 <- tibl06 %>%
 stbp07 <- ggplot(tibl06,aes(smplNo,seqrd.cnt  ,fill = phylum))+
   geom_bar(position = "fill",stat="identity", width = 0.9, 
            #the 'color="#000000",size=0.1' adds a thin line between 
-           # individual parts of the bar in the satcked bar
+           # individual parts of the bar in the stacked bar
            color="#000000",size=0.1)+
   geom_hline(yintercept=0.25, col = "black", lty=2) +
   geom_hline(yintercept=0.5,  col = "black",lty=2) +
