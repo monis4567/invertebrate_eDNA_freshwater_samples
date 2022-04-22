@@ -134,3 +134,19 @@ stbp07 <- ggplot(tibl06,aes(smplNo,seqrd.cnt  ,fill = phylum))+
 # see the plot
 stbp07
 
+
+#plot_annotation(caption=inpf01) #& theme(legend.position = "bottom")
+#p
+#make filename to save plot to
+figname08 <- paste0("Fig07B_stckbarplot_plausibl_spc_repl1_01.png")
+#set variable to define if figures are to be saved
+bSaveFigures<-T
+#paste together path and file name
+figname08 <- paste(wd00,"/",figname08,sep="")
+# check if plot should be saved, and if TRUE , then save as '.png'
+if(bSaveFigures==T){
+  ggsave(stbp07,file=figname08,
+         #width=210,height=297,
+         width=297,height=210,
+         units="mm",dpi=300)
+}
