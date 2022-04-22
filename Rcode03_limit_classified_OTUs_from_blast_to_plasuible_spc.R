@@ -42,7 +42,6 @@ nrow(df_nonoch03)
 # reshape data frame from wide to long
 df_noch04 <- reshape2::melt(df_noch03,id.vars = c("species"),value.name = "seqrd.cnt")
 df_nonoch04 <- reshape2::melt(df_nonoch03,id.vars = c("species"),value.name = "seqrd.cnt")
-
 #change column names
 colnames(df_noch04) <- c("species","smplNo","seqrd.cnt")
 colnames(df_nonoch04) <- c("species","smplNo","seqrd.cnt")
@@ -61,12 +60,18 @@ df_nonoch04$order <- df_c01$order[match(df_nonoch04$species,df_c01$species)]
 df_nonoch04$family <- df_c01$family[match(df_nonoch04$species,df_c01$species)]
 df_nonoch04$genus <- df_c01$genus[match(df_nonoch04$species,df_c01$species)]
 
-
 # see number of taxonomical categories per taxonomical level 
+# among the plausible species
 length(unique(df_noch04$phylum))
 length(unique(df_noch04$class))
 length(unique(df_noch04$order))
 length(unique(df_noch04$family))
+# see number of taxonomical categories per taxonomical level 
+# among the non-plausible species
+length(unique(df_nonoch04$phylum))
+length(unique(df_nonoch04$class))
+length(unique(df_nonoch04$order))
+length(unique(df_nonoch04$family))
 # paste taxonomic categoreis together
 df_noch04$pcofg <- paste(df_noch04$phylum,
                           df_noch04$class,
@@ -76,9 +81,13 @@ df_noch04$pcofg <- paste(df_noch04$phylum,
                          sep="_")
 # use the dplyr package to count up read counts per Sample site
 tibl_04 <- df_noch04 %>%
-  group_by(smplNo) %>%
-  summarise(Freq = sum(seqrd.cnt ))
-
+  dplyr::group_by(smplNo) %>%
+  dplyr::summarise(Freq = sum(seqrd.cnt ))
+# use the dplyr package to count up read counts per Sample site
+# but this time for the non-plausible species
+tibl_nonoch04 <- df_nonoch04 %>%
+  dplyr::group_by(smplNo) %>%
+  dplyr::summarise(Freq = sum(seqrd.cnt ))
 # make viridis colour range
 vclr <- pals::viridis(length(unique(df_noch04$pcofg)))
 
@@ -108,9 +117,10 @@ stbp07 <- ggplot(tibl06,aes(smplNo,seqrd.cnt  ,fill = phylum))+
   geom_hline(yintercept=0.75,  col = "black",lty=2) +
   theme_grey()+
   # add label above each bar to denote total number of reads
-  geom_text(data=tibl06, aes(x = smplNo, y = 0.85,
+  geom_text(data=tibl06, aes(x = smplNo, y = 0.98,
               label = totrcnt), 
-            nudge_x=0.2, vjust=0, angle = 90) +
+            hjust="right",
+            vjust=0.5, angle = 90) +
 
   xlab("sample ID")+
   ylab("percentage of reads from plausible species")+
@@ -119,7 +129,7 @@ stbp07 <- ggplot(tibl06,aes(smplNo,seqrd.cnt  ,fill = phylum))+
   ggtitle("A - replicate 1")+
   guides(fill= guide_legend(ncol=1)) +
   theme(legend.position = "right",
-        axis.text.x = element_text(angle=45, vjust = 0.5),
+        axis.text.x = element_text(angle=90, vjust = 0.5),
         legend.text = element_text(size = 10),
         #use this line below instead if you need italic font
         #legend.text = element_text(size = 10,face="italic"),
