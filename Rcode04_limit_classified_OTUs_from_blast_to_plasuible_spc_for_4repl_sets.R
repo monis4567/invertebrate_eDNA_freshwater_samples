@@ -9,6 +9,7 @@
 #rm(list=ls())
 library(readxl)
 library(dplyr)
+library(ggplot2)
 # define working directory
 wd00 <- "/home/hal9000/Documents/shrfldubuntu18/invertebrate_eDNA_freshwater_samples"
 wdin01 <- "/home/hal9000/Documents/shrfldubuntu18/metabarflow01"
@@ -173,8 +174,78 @@ bSaveFigures<-T
 figname08 <- paste(wd00,"/",figname08,sep="")
 # check if plot should be saved, and if TRUE , then save as '.png'
 if(bSaveFigures==T){
-  ggsave(stbp07,file=figname08,
+  ggplot2::ggsave(stbp07,file=figname08,
          #width=210,height=297,
          width=3*297,height=210,
          units="mm",dpi=300)
 }
+
+#_______________________________________________________________________________
+# add a column for presence absence category
+tibl06$prab <- 0
+# if there is a read count, then assign it the value 1
+# in order to record presence / absence
+tibl06$prab[tibl06$seqrd.cnt>0] <- 1
+#make plot
+stbp08 <- ggplot(tibl06,aes(replNo,prab  ,fill = order))+
+  geom_bar(position = "fill",stat="identity", width = 0.9, 
+           
+           #the 'color="#000000",size=0.1' adds a thin line between 
+           # individual parts of the bar in the stacked bar
+           color="#000000",size=0.1)+
+  geom_hline(yintercept=0.25, col = "black", lty=2) +
+  geom_hline(yintercept=0.5,  col = "black",lty=2) +
+  geom_hline(yintercept=0.75,  col = "black",lty=2) +
+  theme_grey()+
+  # add label above each bar to denote total number of reads
+  # geom_text(data=tibl06, aes(x = smplNo, y = 0.98,
+  #             label = totrcnt), 
+  #           hjust="right",
+  #           vjust=0.5, angle = 90) +
+  
+  xlab("sample ID above, replicate number on bottom")+
+  ylab("presence of plausible species")+
+  #scale_fill_manual(values = vclr)+
+  scale_y_continuous(labels = function(x) paste0(x*100, "%")) +
+  ggtitle("A - replicate 1 and 2, presence / absence all read set to 1")+
+  guides(fill= guide_legend(ncol=1)) +
+  theme(legend.position = "right",
+        axis.text.x = element_text(angle=90, vjust = 0.5),
+        legend.text = element_text(size = 10),
+        #use this line below instead if you need italic font
+        #legend.text = element_text(size = 10,face="italic"),
+        legend.title = element_text(size = 20),
+        legend.key.size = unit(0.57,"cm"),
+        legend.justification = "bottom",       
+        axis.text.y = element_text(size = 20),
+        strip.text.x = element_text(size = 10,face="bold"),
+        title = element_text(size = 12))+
+  facet_grid(.~smplID, scales="free", space = "free") +
+  coord_cartesian(expand=F) +
+  # change spacing between facet plots
+  # see: https://stackoverflow.com/questions/3681647/ggplot-how-to-increase-spacing-between-faceted-plots
+  theme(panel.spacing = unit(0.02, "lines")) #+
+  #
+  #coord_flip() 
+# see the plot
+stbp08
+#plot_annotation(caption=inpf01) #& theme(legend.position = "bottom")
+#p
+#make filename to save plot to
+figname08 <- paste0("Fig07C_stckbarplot_plausibl_spc_repl1and2_pr_ab_01.png")
+#set variable to define if figures are to be saved
+bSaveFigures<-T
+#paste together path and file name
+figname08 <- paste(wd00,"/",figname08,sep="")
+# check if plot should be saved, and if TRUE , then save as '.png'
+if(bSaveFigures==T){
+  ggplot2::ggsave(stbp08,file=figname08,
+                  width=210*5,height=297,
+                  #width=3*297,height=210,
+                  units="mm",dpi=300)
+}
+
+
+
+
+#
