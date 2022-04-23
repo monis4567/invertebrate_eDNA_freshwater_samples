@@ -203,30 +203,39 @@ stbp08 <- ggplot(tibl06,aes(replNo,prab  ,fill = order))+
   #           hjust="right",
   #           vjust=0.5, angle = 90) +
   
-  xlab("sample ID above, replicate number on bottom")+
+  xlab("sample ID is red, replicate number is blue")+
   ylab("presence of plausible species")+
   #scale_fill_manual(values = vclr)+
   scale_y_continuous(labels = function(x) paste0(x*100, "%")) +
-  ggtitle("A - replicate 1 and 2, presence / absence all read set to 1")+
+  ggtitle("A - replicate 1 and 2. Presence/absence eval. All reads have been set to 1")+
   guides(fill= guide_legend(ncol=1)) +
   theme(legend.position = "right",
-        axis.text.x = element_text(angle=90, vjust = 0.5),
+        # set angle and size of labels for tick marks on x axis
+        axis.text.x = element_text(size= 12, angle=90, vjust = 0.5),
         legend.text = element_text(size = 10),
         #use this line below instead if you need italic font
         #legend.text = element_text(size = 10,face="italic"),
-        legend.title = element_text(size = 20),
+        legend.title = element_text(size = 20, angle=0),
         legend.key.size = unit(0.57,"cm"),
-        legend.justification = "bottom",       
-        axis.text.y = element_text(size = 20),
-        strip.text.x = element_text(size = 10,face="bold"),
+        legend.justification = "bottom",    
+        # set text size on tick labels on y axis
+        axis.text.y = element_text(size = 4, color = "blue"),
+        #strip.text.x = element_text(size = 10,face="bold", color="blue", angle=90),
+        # rotate lables in facet wrap title
+        #https://stackoverflow.com/questions/40484090/rotate-switched-facet-labels-in-ggplot2-facet-grid
+        strip.text.y = element_text(size = 8,face="bold", color="red", angle=360),
         title = element_text(size = 12))+
-  facet_grid(.~smplID, scales="free", space = "free") +
-  coord_cartesian(expand=F) +
+  
+  #facet_grid(.~smplID, scales="free", space = "free") +
+  # reverse the order of the variable and the '~.' as the 'coord_flip()' 
+  # will turn the plot around
+  facet_grid(smplID~., scales="free", space = "free") +
+  #coord_cartesian(expand=F) +
   # change spacing between facet plots
   # see: https://stackoverflow.com/questions/3681647/ggplot-how-to-increase-spacing-between-faceted-plots
-  theme(panel.spacing = unit(0.02, "lines")) #+
-  #
-  #coord_flip() 
+  theme(panel.spacing = unit(0.02, "lines")) +
+  # trun axis of plot arounf
+  coord_flip() 
 # see the plot
 stbp08
 #plot_annotation(caption=inpf01) #& theme(legend.position = "bottom")
@@ -240,7 +249,8 @@ figname08 <- paste(wd00,"/",figname08,sep="")
 # check if plot should be saved, and if TRUE , then save as '.png'
 if(bSaveFigures==T){
   ggplot2::ggsave(stbp08,file=figname08,
-                  width=210*5,height=297,
+                  width=210,height=297,
+                  #width=297,height=210,
                   #width=3*297,height=210,
                   units="mm",dpi=300)
 }
