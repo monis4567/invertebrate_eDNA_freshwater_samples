@@ -237,7 +237,11 @@ stbp08 <- ggplot(tibl06,aes(replNo,prab  ,fill = order))+
   # trun axis of plot arounf
   coord_flip() 
 # see the plot
-stbp08
+#stbp08
+# see this website:
+#https://stackoverflow.com/questions/33322061/change-background-color-panel-based-on-year-in-ggplot-r
+# for help on how to use geom_rect for separating the backgrounds. 
+
 #plot_annotation(caption=inpf01) #& theme(legend.position = "bottom")
 #p
 #make filename to save plot to
@@ -255,6 +259,73 @@ if(bSaveFigures==T){
                   units="mm",dpi=300)
 }
 
+#_______________________________________________________________________________
+# Get unique sample IDs
+usID <- unique(tibl06$smplID)
+# count the  unique sample IDs
+nusID <- length(usID)
+# repeat a colur as the count of the  unique sample IDs
+# this colur will be usde for the facet wrap headers
+clsID <- rep("white",nusID)
+# bind by columns the ID number and the color
+df_clsID01 <- as.data.frame(cbind(usID, clsID))
+# Edit the color for a couple of specific columns
+# this can be used for 'DVFI' index categories
+# e.g. use :
+# For DVFI 1 - a dark color like: "gray58"
+# For DVFI 2 - a blue color like: "royalblue2"
+# For DVFI 3 - a purple color like: "darkorchid2"
+# For DVFI 4 - a red color like: "firebrick12"
+# For DVFI 5 - a orange color like: "orange2"
+# For DVFI 6 - a yellow color like: "yellow2"
+# For DVFI 7 - a white color like: "white" - this is the default colr you have
+# assigned to all 'clsID' in above
+# now assign such colors to some selected ID-categories, as defined by column
+# this can be edited to be based on another data frame
+df_clsID01$clsID[c(2,8)] <- "gray58"
+df_clsID01$clsID[c(3,9)] <- "royalblue2"
+df_clsID01$clsID[c(5,12)] <- "darkorchid2"
+df_clsID01$clsID[c(8,19)] <- "firebrick1"
+df_clsID01$clsID[c(13,23)] <- "orange1"
+df_clsID01$clsID[c(15,24:26)] <- "yellow1"
+# assign the column in the data frame to a vector
+clrID <- df_clsID01$clsID
+# and give it a new name as a vector
+fills <- c(clrID)
+# duplicate the plot prepared
+p1 <- stbp08
+# try changing the text colur you assigned as red for the facet wrap headers, 
+# to black instead of being red
+p1 <- p1 + theme(strip.text.y = element_text(size = 8,face="bold", color="black", angle=360))
+# Now see this webiste for preparing different colors in the facet wrap headers 
+# https://stackoverflow.com/questions/41631806/change-facet-label-text-and-background-colour/60046113#60046113
+g1 <- ggplot_gtable(ggplot_build(p1))
+stripr1 <- which(grepl('strip-r', g1$layout$name))
+# assign a count number 1 to begin with
+k <- 1
+#iterate over elements in 'stripr1' 
+for (i in stripr1) {
+  j <- which(grepl('rect', g1$grobs[[i]]$grobs[[1]]$childrenOrder))
+  g1$grobs[[i]]$grobs[[1]]$children[[j]]$gp$fill <- fills[k]
+  k <- k+1
+}
+# assign the plot to a new variable
+stbp09 <- grid::grid.draw(g1)
+
+#make filename to save plot to
+figname08 <- paste0("Fig07C_stckbarplot_plausibl_spc_repl1and2_pr_ab_02.png")
+#set variable to define if figures are to be saved
+bSaveFigures<-T
+#paste together path and file name
+figname08 <- paste(wd00,"/",figname08,sep="")
+# check if plot should be saved, and if TRUE , then save as '.png'
+if(bSaveFigures==T){
+  ggplot2::ggsave(stbp09,file=figname08,
+                  width=210,height=297,
+                  #width=297,height=210,
+                  #width=3*297,height=210,
+                  units="mm",dpi=300)
+}
 
 
 

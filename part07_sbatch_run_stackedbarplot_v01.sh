@@ -37,3 +37,5 @@ srun part07_stackedbarplots_per_group_v02.r
 # cut -f1,72-140 DADA2_nochim.table > DADA2_nochim.table_repl2.txt 
 # cut -f1,141-208 DADA2_nochim.table > DADA2_nochim.table_repl3.txt 
 # cut -f1,209-278 DADA2_nochim.table > DADA2_nochim.table_repl4.txt 
+
+# cut -f1,2-140 DADA2_nochim.table > DADA2_nochim.table_repl1and2.txt
