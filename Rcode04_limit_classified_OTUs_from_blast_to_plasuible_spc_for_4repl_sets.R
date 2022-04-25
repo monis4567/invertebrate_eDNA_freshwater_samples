@@ -7,6 +7,7 @@
 
 #remove everything in the working environment, without a warning!!
 rm(list=ls())
+# load libraries for packages
 library(readxl)
 library(dplyr)
 library(ggplot2)
@@ -441,7 +442,7 @@ tibl07$bd_u <- as.numeric(tibl07$bd_u)
 # https://stackoverflow.com/questions/53416809/r-ggplot-background-color-boxplot
 # make the category number  a character
 tibl07$DVFIcat2 <-  as.character(tibl07$DVFIcat)
-# make a box plot with category colors on top, where boundaries of categories
+# make a box plot with category colors for each ID sample no, where boundaries of categories
 # are defined by the uppe and lower limits calculated per category above
 #Box plot with colored vertical backgrounds to make boxplots on species 
 #inspired by figure 2 presented by Kuntke et al. (2020): 
@@ -481,6 +482,7 @@ if(bSaveFigures==T){
 #_______________________________________________________________________________
 # reshape data frame with only plausible DVFI index genera
 df_nuD06 <- reshape2::melt(df_noch05.uiDSFI,id.vars = c("genNm"),value.name = "seqrd.cnt")
+# assign new column names
 colnames(df_nuD06) <- c("genus","smplIDNo","seqrd.cnt")
 # and split to get replicate number from sample number
 df_nuD06  <- df_nuD06 %>% dplyr::mutate(replNo=gsub(".*_","",smplIDNo))
