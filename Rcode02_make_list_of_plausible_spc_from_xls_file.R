@@ -3,7 +3,7 @@
 
 #____________________________________________________________________________#
 # R-code provided for the project:
-# GBS Population genetics on thorny skates
+# invertebrate species in Danish freshwater streams
 library(readxl)
 # define working directory
 wd00 <- "/home/hal9000/Documents/shrfldubuntu18/invertebrate_eDNA_freshwater_samples"
@@ -16,10 +16,9 @@ pthinf01 <- paste0(wd00,"/",inf01)
 pthinf03 <- paste0(wd00,"/",inf03)
 # read in excel file as tibble, skip 2 rows
 tibl_inx01 <- readxl::read_xlsx(pthinf01)
-tibl_txp01 <- readxl::read_xlsx(pthinf02)
+tibl_txp01 <- readxl::read_xlsx(pthinf03)
 #modify column names
 colnames(tibl_txp01) <- c("group","family","genus","used_inDSFI")
-#head(tibl_inx01,3)
 #substitute spaces underscores
 # define columns to keep
 ke <- c("Art")
@@ -45,13 +44,6 @@ write.table(df_plsp01, file=pthoutf01, sep="\t",
             row.names = F, # do not use row names
             col.names = F, # do not use columns names
             quote = F) # do not use quotes
-# #write the tags files
-# write.table(tibl_tags01, file=pthoutf01, sep="\t",
-#             row.names = F, # do not use row names
-#             col.names = F, # do not use columns names
-#             quote = F) # do not use quotes
-# 
-#tail(tibl_inx01)
 
 # Obtain a list of blast hits from the metabarflow:
 # use this unix command to get unique species : 

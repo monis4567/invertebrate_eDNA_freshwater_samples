@@ -64,7 +64,7 @@ df_noch05 <- df_noch05 %>% dplyr::filter(species %in% df_p01$species)
 df_noch05.uiDSFI <- df_noch05 %>% dplyr::filter(genNm %in% df_uiDSFI01$genus)
 # and subset to include those not in the list of plausible species
 df_nonoch03 <- df_noch02 %>% dplyr::filter(!species %in% df_p01$species)
-# grep column names that start with NK og ID
+# grep column names that start with NK or ID
 NKcols <- colnames(df_noch05.uiDSFI)[grepl("^NK",colnames(df_noch05.uiDSFI))]
 IDcols <- colnames(df_noch05.uiDSFI)[grepl("^ID",colnames(df_noch05.uiDSFI))]
 # make a vector with column names
@@ -277,7 +277,7 @@ stbp08 <- ggplot(tibl06,aes(replNo,prab  ,fill = order))+
   # change spacing between facet plots
   # see: https://stackoverflow.com/questions/3681647/ggplot-how-to-increase-spacing-between-faceted-plots
   theme(panel.spacing = unit(0.02, "lines")) +
-  # trun axis of plot arounf
+  # turn axis of plot around
   coord_flip() 
 # see the plot
 #stbp08
@@ -321,10 +321,10 @@ df_clsID01 <- as.data.frame(cbind(usID, clsID))
 # For DVFI 4 - a red color like: "firebrick12"
 # For DVFI 5 - a orange color like: "orange2"
 # For DVFI 6 - a yellow color like: "yellow2"
-# For DVFI 7 - a white color like: "white" - this is the default colr you have
+# For DVFI 7 - a white color like: "white" - this is the default color you have
 # assigned to all 'clsID' in above
 # now assign such colors to some selected ID-categories, as defined by column
-# this can be edited to be based on another
+# this can be edited to be based on another data frame
 
 
 df_clsID01$clsID[c(2,8)] <- "gray58"
@@ -365,8 +365,6 @@ for (i in stripr1) {
   g1$grobs[[i]]$grobs[[1]]$children[[j]]$gp$fill <- fills[k]
   k <- k+1
 }
-# assign the plot to a new variable
-#grid::?grid.draw(g1)
 
 #make filename to save plot to
 fgn09pd <- paste0("Fig07D_stckbarplot_plausibl_spc_repl1and2_pr_ab_02.pdf")
@@ -393,7 +391,8 @@ dev.off()
 # Try making box plots with diversity
 #_______________________________________________________________________________
 
-# use dplyr to count per group # see this example for help:
+# use dplyr to count per group 
+# see this example for help:
 # https://dplyr.tidyverse.org/reference/count.html
 tibl07 <-tibl06 %>% dplyr::group_by(smplID,replNo) %>% dplyr::tally(seqrd.cnt>0)
 ##https://stackoverflow.com/questions/31955772/ggplot2-reversing-the-order-of-discrete-categories-on-y-axis-in-scatterplot
@@ -404,8 +403,8 @@ bpl01 <- ggplot(tibl07, aes(no_of_spc,smplID)) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) +
   geom_point(alpha=0.7) +
   coord_flip()#
-
-bpl01
+# see the plot
+#bpl01
 
 # make a column for DVFI categories, and assign zero as default value
 tibl06$DVFIcat <- 0 # black
@@ -442,8 +441,9 @@ tibl07$bd_u <- as.numeric(tibl07$bd_u)
 # https://stackoverflow.com/questions/53416809/r-ggplot-background-color-boxplot
 # make the category number  a character
 tibl07$DVFIcat2 <-  as.character(tibl07$DVFIcat)
-# make a box plot with category colors for each ID sample no, where boundaries of categories
-# are defined by the uppe and lower limits calculated per category above
+# make a box plot with category colors for each ID sample number, 
+# where boundaries of categories
+# are defined by the upper and lower limits calculated per category above
 #Box plot with colored vertical backgrounds to make boxplots on species 
 #inspired by figure 2 presented by Kuntke et al. (2020): 
 # Kuntke, F., de Jonge, N., Hesselsøe, M., Nielsen, J.L., 2020. Stream water quality assessment by metabarcoding of invertebrates. Ecological Indicators 111, 105982. https://doi.org/10.1016/j.ecolind.2019.105982
@@ -460,7 +460,6 @@ bpl02 <- ggplot(tibl07, aes(y=no_of_spc, x=smplID)) +
 cl2 <- unique(df_DVFIclc$DVFIcatCol)
 # adjust the fill color of the geom_rect using the 'cl2' categories
 bpl02  <- bpl02 + scale_fill_manual(values=c(cl2))
-
 #make filename to save plot to
 figname10 <- paste0("Fig07E_boxplot_plausibl_spc_repl1and2_pr_ab_01.png")
 #set variable to define if figures are to be saved
