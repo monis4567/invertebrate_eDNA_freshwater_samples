@@ -6,10 +6,12 @@
 # invertebrate species in Danish freshwater streams
 
 #remove everything in the working environment, without a warning!!
-#rm(list=ls())
+rm(list=ls())
 library(readxl)
 library(dplyr)
 library(ggplot2)
+library(grid)
+
 # define working directory
 wd00 <- "/home/hal9000/Documents/shrfldubuntu18/invertebrate_eDNA_freshwater_samples"
 wdin01 <- "/home/hal9000/Documents/shrfldubuntu18/metabarflow01"
@@ -186,6 +188,20 @@ tibl06$prab <- 0
 # if there is a read count, then assign it the value 1
 # in order to record presence / absence
 tibl06$prab[tibl06$seqrd.cnt>0] <- 1
+
+#get unique orders
+uord <- unique(tibl06$order)
+# count unique orders
+nuord <- length(uord)
+# define a color palette
+cbbPalette2 <- c("black","purple","blue","green","yellowgreen",
+                 "yellow","white")
+# make a color ramp function across the palette 
+colfunc <- colorRampPalette(cbbPalette2)
+#https://stackoverflow.com/questions/13353213/gradient-of-n-colors-ranging-from-color-1-and-color-2
+# use the  color ramp function acorss the steps  -  one step per order
+cl <- colfunc(nuord)
+
 #make plot
 stbp08 <- ggplot(tibl06,aes(replNo,prab  ,fill = order))+
   geom_bar(position = "fill",stat="identity", width = 0.9, 
@@ -205,7 +221,7 @@ stbp08 <- ggplot(tibl06,aes(replNo,prab  ,fill = order))+
   
   xlab("sample ID is red, replicate number is blue")+
   ylab("presence of plausible species")+
-  #scale_fill_manual(values = vclr)+
+  scale_fill_manual(values = cl)+
   scale_y_continuous(labels = function(x) paste0(x*100, "%")) +
   ggtitle("A - replicate 1 and 2. Presence/absence eval. All reads have been set to 1")+
   guides(fill= guide_legend(ncol=1)) +
@@ -281,7 +297,7 @@ df_clsID01 <- as.data.frame(cbind(usID, clsID))
 # For DVFI 7 - a white color like: "white" - this is the default colr you have
 # assigned to all 'clsID' in above
 # now assign such colors to some selected ID-categories, as defined by column
-# this can be edited to be based on another data frame
+# this can be edited to be based on another
 df_clsID01$clsID[c(2,8)] <- "gray58"
 df_clsID01$clsID[c(3,9)] <- "royalblue2"
 df_clsID01$clsID[c(5,12)] <- "darkorchid2"
@@ -310,22 +326,28 @@ for (i in stripr1) {
   k <- k+1
 }
 # assign the plot to a new variable
-stbp09 <- grid::grid.draw(g1)
+#grid::?grid.draw(g1)
 
 #make filename to save plot to
-figname08 <- paste0("Fig07C_stckbarplot_plausibl_spc_repl1and2_pr_ab_02.png")
-#set variable to define if figures are to be saved
-bSaveFigures<-T
+fgn09pd <- paste0("Fig07D_stckbarplot_plausibl_spc_repl1and2_pr_ab_02.pdf")
+fgn09pn <- paste0("Fig07D_stckbarplot_plausibl_spc_repl1and2_pr_ab_02.png")
 #paste together path and file name
-figname08 <- paste(wd00,"/",figname08,sep="")
-# check if plot should be saved, and if TRUE , then save as '.png'
-if(bSaveFigures==T){
-  ggplot2::ggsave(stbp09,file=figname08,
-                  width=210,height=297,
-                  #width=297,height=210,
-                  #width=3*297,height=210,
-                  units="mm",dpi=300)
-}
+fgn09 <- paste(wd00,"/",fgn09,sep="")
+grf09 <- grid::grid.draw(g1)
+#save plot
+png(fgn09pn, 
+    #width=(20*2.9232),
+    #height=(20*8.2677),
+    res=300 )
+grid::grid.draw(g1)
+dev.off()
+# save as pdf file
+pdf(fgn09pd, 
+    #width and heigth is in inches. An A4 page is 2.9232 in * 8.2677 in
+    width=(4*2.9232),
+    height=(8.2677) )
+grid::grid.draw(g1)
+dev.off()
 
 
 
