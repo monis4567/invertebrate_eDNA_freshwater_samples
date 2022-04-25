@@ -298,12 +298,25 @@ df_clsID01 <- as.data.frame(cbind(usID, clsID))
 # assigned to all 'clsID' in above
 # now assign such colors to some selected ID-categories, as defined by column
 # this can be edited to be based on another
+
+
 df_clsID01$clsID[c(2,8)] <- "gray58"
 df_clsID01$clsID[c(3,9)] <- "royalblue2"
 df_clsID01$clsID[c(5,12)] <- "darkorchid2"
 df_clsID01$clsID[c(8,19)] <- "firebrick1"
 df_clsID01$clsID[c(13,23)] <- "orange1"
 df_clsID01$clsID[c(15,24:26)] <- "yellow1"
+# also make it a data frame of color categories for 
+df_DVFIclc <- as.data.frame(rbind(c(0,"black"),
+c(1,"gray58"),
+c(2,"royalblue2"),
+c(3,"darkorchid2"),
+c(4,"firebrick1"),
+c(5,"orange1"),
+c(6, "yellow1"),
+c(7, "white")))
+#change the column names
+colnames(df_DVFIclc) <- c("DVFIcatNo","DVFIcatCol")
 # assign the column in the data frame to a vector
 clrID <- df_clsID01$clsID
 # and give it a new name as a vector
@@ -332,7 +345,7 @@ for (i in stripr1) {
 fgn09pd <- paste0("Fig07D_stckbarplot_plausibl_spc_repl1and2_pr_ab_02.pdf")
 fgn09pn <- paste0("Fig07D_stckbarplot_plausibl_spc_repl1and2_pr_ab_02.png")
 #paste together path and file name
-fgn09 <- paste(wd00,"/",fgn09,sep="")
+fgn09pn <- paste(wd00,"/",fgn09pn,sep="")
 grf09 <- grid::grid.draw(g1)
 #save plot
 png(fgn09pn, 
@@ -349,6 +362,91 @@ pdf(fgn09pd,
 grid::grid.draw(g1)
 dev.off()
 
+#_______________________________________________________________________________
+# Try making box plots with diversity
+#_______________________________________________________________________________
 
+# use dplyr to count per group # see this example for help:
+# https://dplyr.tidyverse.org/reference/count.html
+tibl07 <-tibl06 %>% dplyr::group_by(smplID,replNo) %>% dplyr::tally(seqrd.cnt>0)
+##https://stackoverflow.com/questions/31955772/ggplot2-reversing-the-order-of-discrete-categories-on-y-axis-in-scatterplot
+# change column names
+colnames(tibl07) <- c("smplID","replNo","no_of_spc" )
+#make a plot with number of species
+bpl01 <- ggplot(tibl07, aes(no_of_spc,smplID)) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) +
+  geom_point(alpha=0.7) +
+  coord_flip()#
 
-#
+bpl01
+
+# make a column for DVFI categories, and assign zero as default value
+tibl06$DVFIcat <- 0 # black
+#edit the zero DVFI category column based on IDsample number
+tibl06$DVFIcat[tibl06$smplID %in% c("ID012", "ID014")] <- 1 # gray
+tibl06$DVFIcat[tibl06$smplID %in% c("ID031", "ID032")] <- 2 # blue
+tibl06$DVFIcat[tibl06$smplID %in% c("ID066", "ID021")] <- 3 # purple
+tibl06$DVFIcat[tibl06$smplID %in% c("ID006", "ID007")] <- 4 # red
+tibl06$DVFIcat[tibl06$smplID %in% c("ID008", "ID009")] <- 5 # orange
+tibl06$DVFIcat[tibl06$smplID %in% c("ID038", "ID040")] <- 6 # yellow
+tibl06$DVFIcat[tibl06$smplID %in% c("ID047", "ID048")] <- 7 # white
+# match back DVFI category
+tibl07$DVFIcat <- tibl06$DVFIcat[match(tibl07$smplID,tibl06$smplID)]
+# match color category to main tibble
+tibl07$DVFIcatCol <- df_DVFIclc$DVFIcatCol[match(tibl07$DVFIcat,df_DVFIclc$DVFIcatNo)]
+# get unique sample IDs
+usID <- unique(tibl07$smplID)
+# count the unique sample IDs
+nsID <-  length(usID)
+# make a sequence series for sample IDs
+sesID <- seq(1,nsID)
+# make a data frame with lower and upper boundaries per sample ID category
+df_bd <- as.data.frame(cbind(usID, sesID-0.5, sesID+0.5))
+# change the column names
+colnames(df_bd) <- c("smplID","bd_l","bd_u")
+# Match back to the tibble
+tibl07$bd_l <- df_bd$bd_l[match(tibl07$smplID,df_bd$smplID)]
+tibl07$bd_u <- df_bd$bd_u[match(tibl07$smplID,df_bd$smplID)]
+#make the new columns factors
+tibl07$bd_l <- as.numeric(tibl07$bd_l)
+tibl07$bd_u <- as.numeric(tibl07$bd_u)
+# the boundaries for each sampleID is needed to make category colors on the plot
+# as seen here:
+# https://stackoverflow.com/questions/53416809/r-ggplot-background-color-boxplot
+# make the category number  a character
+tibl07$DVFIcat2 <-  as.character(tibl07$DVFIcat)
+# make a box plot with category colors on top, where boundaries of categories
+# are defined by the uppe and lower limits calculated per category above
+#Box plot with colored vertical backgrounds to make boxplots on species 
+#inspired by figure 2 presented by Kuntke et al. (2020): 
+# Kuntke, F., de Jonge, N., Hesselsøe, M., Nielsen, J.L., 2020. Stream water quality assessment by metabarcoding of invertebrates. Ecological Indicators 111, 105982. https://doi.org/10.1016/j.ecolind.2019.105982
+bpl02 <- ggplot(tibl07, aes(y=no_of_spc, x=smplID)) + 
+  geom_boxplot(aes(col=no_of_spc)) +
+  geom_rect(aes(xmin = bd_l,
+                xmax = bd_u,
+                ymin = -Inf, ymax = Inf,
+                fill = DVFIcat2), alpha = 0.3) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) +
+  ggplot2::ggtitle("B - inspired by fig2 in Kuntke et al. (2020)" ) +
+  geom_point(alpha=0.7) 
+# get unique color categories for DVFI categories , and assign to vector
+cl2 <- unique(df_DVFIclc$DVFIcatCol)
+# adjust the fill color of the geom_rect using the 'cl2' categories
+bpl02  <- bpl02 + scale_fill_manual(values=c(cl2))
+
+#make filename to save plot to
+figname10 <- paste0("Fig07E_boxplot_plausibl_spc_repl1and2_pr_ab_01.png")
+#set variable to define if figures are to be saved
+bSaveFigures<-T
+#paste together path and file name
+figname10 <- paste(wd00,"/",figname10,sep="")
+# check if plot should be saved, and if TRUE , then save as '.png'
+if(bSaveFigures==T){
+  ggplot2::ggsave(bpl02,file=figname10,
+                  #width=210,height=297,
+                  width=297,height=210,
+                  #width=3*297,height=210,
+                  units="mm",dpi=300)
+}
+
+bpl02
