@@ -23,26 +23,56 @@ wdin01 <- "/home/hal9000/Documents/shrfldubuntu18/metabarflow01"
 inf01 <- "part07_table_plausible_species.csv"
 inf02 <- "classified.txt"
 inf03 <- "DADA2_nochim.table_repl1and2.txt"
+inf04 <- "part07_table_used_in_DSFI.csv"
 # paste together path and input file
 pthinf01 <- paste0(wd00,"/",inf01)
 pthinf02 <- paste0(wdin01,"/",inf02)
 pthinf03 <- paste0(wdin01,"/",inf03)
+pthinf04 <- paste0(wd00,"/",inf04)
 # read in files
 df_p01 <- read.csv(pthinf01, header = T)
 df_c01 <- read.table(pthinf02, sep="\t",header = T)
 df_noch01 <- read.table(pthinf03, sep="\t",header = T)
+df_uiDSFI01 <- read.csv(pthinf04, header = F)
 # change column name of first column
 colnames(df_noch01)[1] <- "seqid"
+colnames(df_uiDSFI01)[1] <- "genus"
 #match back taxonomic species category
 df_noch01$species <- df_c01$species[match(df_noch01$seqid,df_c01$qseqid)]
 # sum up read counts from different seqid within same species
 df_noch02 <- aggregate(df_noch01[,sapply(df_noch01,is.numeric)],df_noch01["species"],sum)
+# duplicate the data fram
+df_noch05 <- df_noch02
+# split a column
+df_noch05 <- tidyr::separate(df_noch05, species, sep = " ", into = paste0("spc", 1:4), fill = "right")
+# duplicate columns and store under different column name
+df_noch05$spcNm <- df_noch05$spc2
+df_noch05$genNm <- df_noch05$spc1
+# paste columns together
+df_noch05$species <- paste0(df_noch05$genNm," ",df_noch05$spcNm)
+# ensure the column is a character column
+df_noch05$genNm <- as.character(df_noch05$genNm)
+df_noch05$species <- as.character(df_noch05$species)
 # load the dplyr package
 library(dplyr)
 #Subsetting rows in nochim table based on data frame with plausible species
 df_noch03 <- df_noch02 %>% dplyr::filter(species %in% df_p01$species)
+# first subset by plausiable species
+df_noch05 <- df_noch05 %>% dplyr::filter(species %in% df_p01$species)
+# then subset again by DSFI index genus names
+df_noch05.uiDSFI <- df_noch05 %>% dplyr::filter(genNm %in% df_uiDSFI01$genus)
 # and subset to include those not in the list of plausible species
 df_nonoch03 <- df_noch02 %>% dplyr::filter(!species %in% df_p01$species)
+# grep column names that start with NK og ID
+NKcols <- colnames(df_noch05.uiDSFI)[grepl("^NK",colnames(df_noch05.uiDSFI))]
+IDcols <- colnames(df_noch05.uiDSFI)[grepl("^ID",colnames(df_noch05.uiDSFI))]
+# make a vector with column names
+nke <- c("genNm",IDcols,NKcols)
+# use this vector to exlude column names not in the vector
+df_noch05.uiDSFI <- df_noch05.uiDSFI[nke]
+# sum up read counts from different seqid within same genNm
+df_noch05.uiDSFI <- aggregate(df_noch05.uiDSFI[,sapply(df_noch05.uiDSFI,is.numeric)],df_noch05.uiDSFI["genNm"],sum)
+
 # count the number of rows in the dataframes
 nrow(df_noch03)
 nrow(df_nonoch03)
@@ -76,7 +106,6 @@ df_nonoch04$class <- df_c01$class[match(df_nonoch04$species,df_c01$species)]
 df_nonoch04$order <- df_c01$order[match(df_nonoch04$species,df_c01$species)]
 df_nonoch04$family <- df_c01$family[match(df_nonoch04$species,df_c01$species)]
 df_nonoch04$genus <- df_c01$genus[match(df_nonoch04$species,df_c01$species)]
-
 # see number of taxonomical categories per taxonomical level 
 # among the plausible species
 length(unique(df_noch04$phylum))
@@ -115,7 +144,6 @@ df_noch04$totrcnt <- tibl_04$Freq[match(df_noch04$smplNo,tibl_04$smplNo)]
 df_nonoch04$totrcnt <- tibl_nonoch04$Freq[match(df_nonoch04$smplNo,tibl_nonoch04$smplNo)]
 #arrrange tibble
 tibl06 <- df_noch04 %>% group_by(species, smplNo) 
-
 #add a line break to species names
 tibl06 <- tibl06 %>%
   group_by(smplNo) %>%
@@ -165,7 +193,7 @@ stbp07 <- ggplot(tibl06,aes(replNo,seqrd.cnt  ,fill = phylum))+
   # see: https://stackoverflow.com/questions/3681647/ggplot-how-to-increase-spacing-between-faceted-plots
   theme(panel.spacing = unit(0.02, "lines"))
 # see the plot
-stbp07
+#stbp07
 #plot_annotation(caption=inpf01) #& theme(legend.position = "bottom")
 #p
 #make filename to save plot to
@@ -188,7 +216,6 @@ tibl06$prab <- 0
 # if there is a read count, then assign it the value 1
 # in order to record presence / absence
 tibl06$prab[tibl06$seqrd.cnt>0] <- 1
-
 #get unique orders
 uord <- unique(tibl06$order)
 # count unique orders
@@ -201,7 +228,6 @@ colfunc <- colorRampPalette(cbbPalette2)
 #https://stackoverflow.com/questions/13353213/gradient-of-n-colors-ranging-from-color-1-and-color-2
 # use the  color ramp function acorss the steps  -  one step per order
 cl <- colfunc(nuord)
-
 #make plot
 stbp08 <- ggplot(tibl06,aes(replNo,prab  ,fill = order))+
   geom_bar(position = "fill",stat="identity", width = 0.9, 
@@ -449,4 +475,43 @@ if(bSaveFigures==T){
                   units="mm",dpi=300)
 }
 
-bpl02
+#_______________________________________________________________________________
+# Make boxplot with only DSFI index genera within subset list of 
+# plausible species
+#_______________________________________________________________________________
+# reshape data frame with only plausible DVFI index genera
+df_nuD06 <- reshape2::melt(df_noch05.uiDSFI,id.vars = c("genNm"),value.name = "seqrd.cnt")
+colnames(df_nuD06) <- c("genus","smplIDNo","seqrd.cnt")
+# and split to get replicate number from sample number
+df_nuD06  <- df_nuD06 %>% dplyr::mutate(replNo=gsub(".*_","",smplIDNo))
+df_nuD06  <- df_nuD06 %>% dplyr::mutate(smplID=gsub("_.*","",smplIDNo))
+# use dplyr to count per group # see this example for help:
+# https://dplyr.tidyverse.org/reference/count.html
+df_nuD07 <-df_nuD06 %>% dplyr::group_by(smplID,replNo) %>% dplyr::tally(seqrd.cnt>0)
+# change column names
+colnames(df_nuD07) <- c("smplID","replNo","no_of_genera" )
+# make a boxplot
+bpl03 <- ggplot(df_nuD07, aes(y=no_of_genera, x=smplID)) + 
+  geom_boxplot(aes(col=no_of_genera)) +
+  # geom_rect(aes(xmin = bd_l,
+  #               xmax = bd_u,
+  #               ymin = -Inf, ymax = Inf,
+  #               fill = DVFIcat2), alpha = 0.3) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) +
+  ggplot2::ggtitle("C - no of DSFI genera found in eDNA" ) +
+  geom_point(alpha=0.7) 
+
+#make filename to save plot to
+figname11 <- paste0("Fig07F_boxplot_DSFI_genera_repl1and2_pr_ab_01.png")
+#set variable to define if figures are to be saved
+bSaveFigures<-T
+#paste together path and file name
+figname11 <- paste(wd00,"/",figname11,sep="")
+# check if plot should be saved, and if TRUE , then save as '.png'
+if(bSaveFigures==T){
+  ggplot2::ggsave(bpl03,file=figname11,
+                  #width=210,height=297,
+                  width=297,height=210,
+                  #width=3*297,height=210,
+                  units="mm",dpi=300)
+}
