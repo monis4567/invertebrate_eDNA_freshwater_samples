@@ -24,6 +24,7 @@ wdin01 <- "/home/hal9000/Documents/shrfldubuntu18/metabarflow01"
 inf01 <- "part07_table_plausible_species.csv"
 inf02 <- "classified.txt"
 inf03 <- "DADA2_nochim.table_repl1and2.txt"
+inf03 <- "DADA2_nochim.table_repl1_4.txt"
 inf04 <- "part07_table_used_in_DSFI.csv"
 inf05 <- "DSFI_allmethods.xlsx"
 inf06 <- "DVFI_TEST.xlsx"
@@ -347,7 +348,7 @@ stbp07 <- ggplot(tibl06,aes(replNo,seqrd.cnt  ,fill = phylum))+
   ylab("percentage of reads from plausible species")+
   #scale_fill_manual(values = vclr)+
   scale_y_continuous(labels = function(x) paste0(x*100, "%")) +
-  ggtitle("A - replicate 1 and 2")+
+  ggtitle("A - replicate 1 - 4 ")+
   guides(fill= guide_legend(ncol=1)) +
   theme(legend.position = "right",
         axis.text.x = element_text(angle=90, vjust = 0.5),
@@ -371,6 +372,7 @@ stbp07 <- ggplot(tibl06,aes(replNo,seqrd.cnt  ,fill = phylum))+
 #p
 #make filename to save plot to
 figname08 <- paste0("Fig07B_stckbarplot_plausibl_spc_repl1and2_01.png")
+figname08 <- paste0("Fig07B_stckbarplot_plausibl_spc_repl1_4_01.png")
 #set variable to define if figures are to be saved
 bSaveFigures<-T
 #paste together path and file name
@@ -422,7 +424,7 @@ stbp08 <- ggplot(tibl06,aes(replNo,prab  ,fill = order))+
   ylab("presence of plausible species")+
   scale_fill_manual(values = cl)+
   scale_y_continuous(labels = function(x) paste0(x*100, "%")) +
-  ggtitle("A - replicate 1 and 2. Presence/absence eval. All reads have been set to 1")+
+  ggtitle("A - replicate 1 - 4. Presence/absence eval. All reads have been set to 1")+
   guides(fill= guide_legend(ncol=1)) +
   theme(legend.position = "right",
         # set angle and size of labels for tick marks on x axis
@@ -460,7 +462,7 @@ stbp08 <- ggplot(tibl06,aes(replNo,prab  ,fill = order))+
 #plot_annotation(caption=inpf01) #& theme(legend.position = "bottom")
 #p
 #make filename to save plot to
-figname08 <- paste0("Fig07C_stckbarplot_plausibl_spc_repl1and2_pr_ab_01.png")
+figname08 <- paste0("Fig07C_stckbarplot_plausibl_spc_repl1_4_pr_ab_01.png")
 #set variable to define if figures are to be saved
 bSaveFigures<-T
 #paste together path and file name
@@ -505,6 +507,8 @@ df_clsID01$clsID[c(5,12)] <- "darkorchid2"
 df_clsID01$clsID[c(8,19)] <- "firebrick1"
 df_clsID01$clsID[c(13,23)] <- "orange1"
 df_clsID01$clsID[c(15,24:26)] <- "yellow1"
+
+
 # also make it a data frame of color categories for 
 df_DVFIclc <- as.data.frame(rbind(c(0,"black"),
 c(1,"gray58"),
@@ -516,6 +520,13 @@ c(6, "yellow1"),
 c(7, "white")))
 #change the column names
 colnames(df_DVFIclc) <- c("DVFIcatNo","DVFIcatCol")
+
+clsID01_Dcat <- df_DS02$DVFI[match(df_clsID01$usID,df_DS02$Sample_number)]
+clsID01_Dcat[is.na(clsID01_Dcat)] <- 0
+
+df_clsID01$clsID <- df_DVFIclc$DVFIcatCol[match(clsID01_Dcat,df_DVFIclc$DVFIcatNo)]
+# sort the data frame by sample name to make it match the order of thw facet wraps
+df_clsID01 <- df_clsID01[order(df_clsID01$usID),]
 # assign the column in the data frame to a vector
 clrID <- df_clsID01$clsID
 # and give it a new name as a vector
@@ -541,6 +552,10 @@ for (i in stripr1) {
 #make filename to save plot to
 fgn09pd <- paste0("Fig07D_stckbarplot_plausibl_spc_repl1and2_pr_ab_02.pdf")
 fgn09pn <- paste0("Fig07D_stckbarplot_plausibl_spc_repl1and2_pr_ab_02.png")
+
+fgn09pd <- paste0("Fig07D_stckbarplot_plausibl_spc_repl1_4_pr_ab_02.pdf")
+fgn09pn <- paste0("Fig07D_stckbarplot_plausibl_spc_repl1_4_pr_ab_02.png")
+
 #paste together path and file name
 fgn09pn <- paste(wd00,"/",fgn09pn,sep="")
 grf09 <- grid::grid.draw(g1)
@@ -580,6 +595,7 @@ bpl01 <- ggplot(tibl07, aes(no_of_spc,smplID)) +
 
 # make a column for DVFI categories, and assign zero as default value
 tibl06$DVFIcat <- 0 # black
+df_DS02$Sample_number
 #edit the zero DVFI category column based on IDsample number
 tibl06$DVFIcat[tibl06$smplID %in% c("ID012", "ID014")] <- 1 # gray
 tibl06$DVFIcat[tibl06$smplID %in% c("ID031", "ID032")] <- 2 # blue
@@ -588,6 +604,16 @@ tibl06$DVFIcat[tibl06$smplID %in% c("ID006", "ID007")] <- 4 # red
 tibl06$DVFIcat[tibl06$smplID %in% c("ID008", "ID009")] <- 5 # orange
 tibl06$DVFIcat[tibl06$smplID %in% c("ID038", "ID040")] <- 6 # yellow
 tibl06$DVFIcat[tibl06$smplID %in% c("ID047", "ID048")] <- 7 # white
+
+tibl06$DVFIcat <- df_DS02$DVFI[match(tibl06$smplID,df_DS02$Sample_number)]
+tibl06$DSFI_CONVcat <- df_DS02$DSFI_CONV[match(tibl06$smplID,df_DS02$Sample_number)]
+tibl06$DSFI_ew_cat <- df_DS02$DSFI_eDNA_water[match(tibl06$smplID,df_DS02$Sample_number)]
+tibl06$DSFI_eb_cat <- df_DS02$DSFI_eDNA_bucket[match(tibl06$smplID,df_DS02$Sample_number)]
+# replace NAs with zeroes
+tibl06$DVFIcat[is.na(tibl06$DVFIcat)] <- 0
+tibl06$DSFI_CONVcat[is.na(tibl06$DSFI_CONVcat)] <- 0
+tibl06$DSFI_ew_cat[is.na(tibl06$DSFI_ew_cat)] <- 0
+tibl06$DSFI_eb_cat[is.na(tibl06$DSFI_eb_cat)] <- 0
 # match back DVFI category
 tibl07$DVFIcat <- tibl06$DVFIcat[match(tibl07$smplID,tibl06$smplID)]
 # match color category to main tibble
@@ -633,7 +659,7 @@ cl2 <- unique(df_DVFIclc$DVFIcatCol)
 # adjust the fill color of the geom_rect using the 'cl2' categories
 bpl02  <- bpl02 + scale_fill_manual(values=c(cl2))
 #make filename to save plot to
-figname10 <- paste0("Fig07E_boxplot_plausibl_spc_repl1and2_pr_ab_01.png")
+figname10 <- paste0("Fig07E_boxplot_plausibl_spc_repl1_4_pr_ab_01.png")
 #set variable to define if figures are to be saved
 bSaveFigures<-T
 #paste together path and file name
@@ -675,7 +701,7 @@ bpl03 <- ggplot(df_nuD07, aes(y=no_of_genera, x=smplID)) +
   geom_point(alpha=0.7) 
 
 #make filename to save plot to
-figname11 <- paste0("Fig07F_boxplot_DSFI_genera_repl1and2_pr_ab_01.png")
+figname11 <- paste0("Fig07F_boxplot_DSFI_genera_repl1_4_pr_ab_01.png")
 #set variable to define if figures are to be saved
 bSaveFigures<-T
 #paste together path and file name
@@ -875,6 +901,10 @@ df_DS02.env <- df_DS02.env[!df_DS02.env$Sample_number2=="ID042_2",]
 # 'df_DS02.env' data frame. Because of this I remove this row
 # from this data frame
 df_DS02.env <- df_DS02.env[!df_DS02.env$Sample_number2=="NK01_2",]
+df_DS02.env <- df_DS02.env[!df_DS02.env$Sample_number2=="ID021_3",]
+df_DS02.env <- df_DS02.env[!df_DS02.env$Sample_number2=="NK01_3",]
+df_DS02.env <- df_DS02.env[!df_DS02.env$Sample_number2=="NK06_3",]
+
 # count the number of rows in the 'df_DS02.env' data frame
 nrow(df_DS02.env)
 # find the sample numbers that are not included in the 'df_DS02.env' data frame 
@@ -1206,21 +1236,31 @@ plotgg4 <- ggplot() +
 plotgg4
 # 
 # #_______________________________________________________________________________
+
+# make the ordination model on your own data
+df_n05.Hell <- disttransform(df_n05, method='hellinger')
+ordM1 <- rda(df_n05.Hell ~ Sample_number2, 
+             data=df_DS02.env, 
+             scaling="species")
+#df_n05[is.na(df_n05),]
+ordM2 <- BiodiversityR::CAPdiscrim(df_n05 ~ Sample_number2, 
+                                   data=df_DS02.env,
+                          dist="bray", axes=2, m=0, add=FALSE)
 # Ordination.model1 <- BiodiversityR::CAPdiscrim(reads~habitat.x,samples,
 #                                 dist="bray", axes=2, m=0, add=FALSE)
-# Ordination.model1
-# plot1 <- ordiplot(Ordination.model1, type="none")
-# #ordisymbol(plot1, samples, "habitat.x", col = colvec[samples$habitat],pchs=FALSE,legend=FALSE)
-# ordihull(Ordination.model1,groups=samples$habitat,
-#          display="sites",col=colvec,alpha=100,draw="polygon",border=colvec)
-# plot(seq(1:14), rep(-1000, 14), xlim=c(1, 14), ylim=c(0, 100), xlab="m",
-#      ylab="classification success (percent)", type="n")
-# for (mseq in 1:14) {
-#   CAPdiscrim.result <- CAPdiscrim(reads~habitat.x,samples,
-#                                   dist="bray", axes=2, m=mseq)
-#   points(mseq, CAPdiscrim.result$percent)
-# }
-# }
-# 
-# #Håber, det kan bruges :-) Funktionen CAPdiscrim er fra pakken BiodiversityR.
+Ordination.model1
+plot1 <- ordiplot(Ordination.model1, type="none")
+#ordisymbol(plot1, samples, "habitat.x", col = colvec[samples$habitat],pchs=FALSE,legend=FALSE)
+ordihull(Ordination.model1,groups=samples$habitat,
+         display="sites",col=colvec,alpha=100,draw="polygon",border=colvec)
+plot(seq(1:14), rep(-1000, 14), xlim=c(1, 14), ylim=c(0, 100), xlab="m",
+     ylab="classification success (percent)", type="n")
+for (mseq in 1:14) {
+  CAPdiscrim.result <- CAPdiscrim(reads~habitat.x,samples,
+                                  dist="bray", axes=2, m=mseq)
+  points(mseq, CAPdiscrim.result$percent)
+}
+}
+
+#Håber, det kan bruges :-) Funktionen CAPdiscrim er fra pakken BiodiversityR.
 
