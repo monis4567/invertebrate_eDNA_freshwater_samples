@@ -9,6 +9,7 @@
 rm(list=ls())
 library(readxl)
 library(dplyr)
+library(ggplot2)
 # define working directory
 wd00 <- "/home/hal9000/Documents/shrfldubuntu18/invertebrate_eDNA_freshwater_samples"
 wdin01 <- "/home/hal9000/Documents/shrfldubuntu18/metabarflow01"

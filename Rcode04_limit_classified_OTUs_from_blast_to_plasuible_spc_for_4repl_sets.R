@@ -25,16 +25,187 @@ inf01 <- "part07_table_plausible_species.csv"
 inf02 <- "classified.txt"
 inf03 <- "DADA2_nochim.table_repl1and2.txt"
 inf04 <- "part07_table_used_in_DSFI.csv"
+inf05 <- "DSFI_allmethods.xlsx"
+inf06 <- "DVFI_TEST.xlsx"
+inf07 <- "Overview_Samples.xlsx"
+inf08 <- "Koordinater.xlsx"
+
 # paste together path and input file
 pthinf01 <- paste0(wd00,"/",inf01)
 pthinf02 <- paste0(wdin01,"/",inf02)
 pthinf03 <- paste0(wdin01,"/",inf03)
 pthinf04 <- paste0(wd00,"/",inf04)
+pthinf05 <- paste0(wd00,"/",inf05)
+pthinf06 <- paste0(wd00,"/",inf06)
+pthinf07 <- paste0(wd00,"/",inf07)
+pthinf08 <- paste0(wd00,"/",inf08)
 # read in files
 df_p01 <- read.csv(pthinf01, header = T)
 df_c01 <- read.table(pthinf02, sep="\t",header = T)
 df_noch01 <- read.table(pthinf03, sep="\t",header = T)
 df_uiDSFI01 <- read.csv(pthinf04, header = F)
+df_DS01 <- readxl::read_xlsx(pthinf05)
+df_SS01 <- readxl::read_xlsx(pthinf06)
+
+df_poss01 <- readxl::read_xlsx(pthinf07)
+tibl_cordDSFI01 <- readxl::read_xlsx(pthinf08)
+
+# change column name of first column
+colnames(df_noch01)[1] <- "seqid"
+colnames(df_uiDSFI01)[1] <- "genus"
+colnames(df_poss01)[1] <- "arbitNo"
+# check if any column names include the number '42'
+# the match later on with sampling locations and the attempt to make a 
+# linear discriminant analysis using the 'BiodiversityR' package needs
+# the sample location numbers in the two data frames that contains the number 
+# sequence reads, and the data frame the contains the sampling information to
+# match in number of rows. The data frame with sampling locations includes a 
+# sample "ID042_2" , but this sample is absent from the original 'df_noch01'
+# data frame
+# I used this line here below to check this
+colnames(df_noch01)[grepl("42",colnames(df_noch01))]
+colnames(df_noch01)[grepl("NK",colnames(df_noch01))]
+#replace in column names
+colnames(df_poss01) <- gsub("\\(","",colnames(df_poss01))
+colnames(df_poss01) <- gsub("\\)","",colnames(df_poss01))
+colnames(df_poss01) <- gsub("\\/","_",colnames(df_poss01))
+colnames(df_poss01) <- gsub(" ","_",colnames(df_poss01))
+colnames(df_poss01) <- gsub("º","",colnames(df_poss01))
+#modify contents of columns
+tmID <- gsub("ID","",df_poss01$Sample_number)
+smptmID <- tmID[!grepl("NK",tmID)]
+NKtmID <- tmID[grepl("NK",tmID)]
+#pad with zero
+smptmID <-stringr::str_pad(smptmID, 3, pad = "0")
+#paste together with 'ID' handle
+smptmID <-  paste0("ID",smptmID)
+# make a new vector and add back in to data frame
+df_poss01$Sample_number <- c(smptmID,NKtmID)
+#replace in columns
+df_poss01$Location <- gsub(" ","_",df_poss01$Location)
+df_poss01$Location <- gsub("Å","AA",df_poss01$Location)
+df_poss01$Location <- gsub("Æ","AE",df_poss01$Location)
+df_poss01$Location <- gsub("Ø","OE",df_poss01$Location)
+df_poss01$Location <- gsub("å","aa",df_poss01$Location)
+df_poss01$Location <- gsub("æ","ae",df_poss01$Location)
+df_poss01$Location <- gsub("ø","oe",df_poss01$Location)
+df_poss01$Location <- gsub(",","",df_poss01$Location)
+#replace in columns
+tibl_cordDSFI01$Location <- gsub(" ","_",tibl_cordDSFI01$Location)
+tibl_cordDSFI01$Location <- gsub("Å","AA",tibl_cordDSFI01$Location)
+tibl_cordDSFI01$Location <- gsub("Æ","AE",tibl_cordDSFI01$Location)
+tibl_cordDSFI01$Location <- gsub("Ø","OE",tibl_cordDSFI01$Location)
+tibl_cordDSFI01$Location <- gsub("å","aa",tibl_cordDSFI01$Location)
+tibl_cordDSFI01$Location <- gsub("æ","ae",tibl_cordDSFI01$Location)
+tibl_cordDSFI01$Location <- gsub("ø","oe",tibl_cordDSFI01$Location)
+tibl_cordDSFI01$Location <- gsub(",","",tibl_cordDSFI01$Location)
+
+
+#replace in columns
+df_poss01$Location <- gsub(" ","_",df_poss01$Location)
+df_poss01$Location <- gsub("Å","AA",df_poss01$Location)
+df_poss01$Location <- gsub("Æ","AE",df_poss01$Location)
+df_poss01$Location <- gsub("Ø","OE",df_poss01$Location)
+df_poss01$Location <- gsub("å","aa",df_poss01$Location)
+df_poss01$Location <- gsub("æ","ae",df_poss01$Location)
+df_poss01$Location <- gsub("ø","oe",df_poss01$Location)
+df_poss01$Location <- gsub(",","",df_poss01$Location)
+#replace in columns
+df_DS01$Location <- gsub(" ","_",df_DS01$Location)
+df_DS01$Location <- gsub("Å","AA",df_DS01$Location)
+df_DS01$Location <- gsub("Æ","AE",df_DS01$Location)
+df_DS01$Location <- gsub("Ø","OE",df_DS01$Location)
+df_DS01$Location <- gsub("å","aa",df_DS01$Location)
+df_DS01$Location <- gsub("æ","ae",df_DS01$Location)
+df_DS01$Location <- gsub("ø","oe",df_DS01$Location)
+df_DS01$Location <- gsub(",","",df_DS01$Location)
+# replace in location names - to make data frames match -  this will be important
+# for the 'vegan::rda' function later on
+df_DS01$Location <- gsub("Hestetangsaa","Hestetangs_AA",df_DS01$Location)
+df_DS01$Location <- gsub("Hjelmsoelille_Susaa","Hjelmsoelille" ,df_DS01$Location)
+df_DS01$Location <- gsub("Buske_Susaa","Buske" ,df_DS01$Location)
+df_DS01$Location <- gsub("Lindes_AA","Lindesaa" ,df_DS01$Location)
+# replace in location names - to make data frames match -  this will be important
+# for the 'vegan::rda' function later on
+df_DS01$Location <- gsub("_ned","_Ned" ,df_DS01$Location)
+df_DS01$Location <- gsub("_op","_Op" ,df_DS01$Location)
+df_DS01$Location <- gsub("_midt","_Midt" ,df_DS01$Location)
+# get unique location names -  in order
+uDS01 <- unique(df_DS01$Location)[order(unique(df_DS01$Location))]
+udps01 <- unique(df_poss01$Location)[order(unique(df_poss01$Location))]
+# compatre the unique location names in the two data frames -  there should
+# not be any differences, otherwise the merge step later on will not work 
+# as intended. The 'merge' function later on is dependent on exact matches
+# betweenm location names
+setdiff(uDS01,udps01)
+# split a column
+df_poss01 <- tidyr::separate(df_poss01, Sampletype, sep = ", ", into = paste0(c("filtertp","smpltype"), 1:2), fill = "right")
+# make column numeric
+df_poss01$Water_volume_filtered_mL <- as.numeric(df_poss01$Water_volume_filtered_mL)
+df_poss01$pH <- as.numeric(df_poss01$pH)
+df_poss01$Temperature_C <- as.numeric(df_poss01$Temperature_C)
+df_poss01$Latitude <- as.numeric(df_poss01$Latitude)
+df_poss01$Longitude <- as.numeric(df_poss01$Longitude)
+df_poss01$Qubit_tube_concentration_with_2ul_sample_ng_ml <- as.numeric(df_poss01$Qubit_tube_concentration_with_2ul_sample_ng_ml)
+
+##########################################################################################
+# begin -  Function to fill NAs with previous value
+##########################################################################################
+#fill NAs with latest non-NA value
+#http://www.cookbook-r.com/Manipulating_data/Filling_in_NAs_with_last_non-NA_value/
+#https://stackoverflow.com/questions/7735647/replacing-nas-with-latest-non-na-value
+fillNAgaps <- function(x, firstBack=FALSE) {
+  ## NA's in a vector or factor are replaced with last non-NA values
+  ## If firstBack is TRUE, it will fill in leading NA's with the first
+  ## non-NA value. If FALSE, it will not change leading NA's.
+  # If it's a factor, store the level labels and convert to integer
+  lvls <- NULL
+  if (is.factor(x)) {
+    lvls <- levels(x)
+    x    <- as.integer(x)
+  }
+  goodIdx <- !is.na(x)
+  # These are the non-NA values from x only
+  # Add a leading NA or take the first good value, depending on firstBack   
+  if (firstBack)   goodVals <- c(x[goodIdx][1], x[goodIdx])
+  else             goodVals <- c(NA,            x[goodIdx])
+  # Fill the indices of the output vector with the indices pulled from
+  # these offsets of goodVals. Add 1 to avoid indexing to zero.
+  fillIdx <- cumsum(goodIdx)+1
+  x <- goodVals[fillIdx]
+  # If it was originally a factor, convert it back
+  if (!is.null(lvls)) {
+    x <- factor(x, levels=seq_along(lvls), labels=lvls)
+  }
+  x
+}
+##########################################################################################
+# end -  Function to fill NAs with previous value
+##########################################################################################
+#use funciton 'fillNAgaps' to replace NAs with values in the row above
+df_poss01$arbitNo <- fillNAgaps(df_poss01$arbitNo)
+df_poss01$Latitude <- fillNAgaps(df_poss01$Latitude)
+df_poss01$Longitude <- fillNAgaps(df_poss01$Longitude)
+# get the highest arbitrary number
+maxarbno <- max(df_poss01$arbitNo)
+# increase this count by one and add it back to the NK samples
+df_poss01$arbitNo[grepl("NK", df_poss01$Sample_number)] <- maxarbno+1
+#replace the incorrect added longitude and incorrect latitudes
+df_poss01$Longitude[grepl("NK", df_poss01$Sample_number)] <- NA
+df_poss01$Latitude[grepl("NK", df_poss01$Sample_number)] <- NA
+# group by arbitrary number to get unique rows , and count
+tibl_02 <- df_poss01%>%group_by(arbitNo,Location,Sample_number,Latitude,Longitude) %>%count()
+# match location names between data frames to get DVFI index code appended on to tibble
+tibl_02$DVFI <- tibl_cordDSFI01$DVFI[match(tibl_02$Location,tibl_cordDSFI01$Location)]
+#make the tibble a data frame
+tb2 <- as.data.frame(tibl_02)
+# merge data frames - Not you must specify all.x=TRUE  and all.y=TRUE
+# to make the merge function include all cases of the 'Location' - even
+# cases that are blank -  also see : https://www.programmingr.com/tutorial/left-join-in-r/
+
+df_DS02<-merge(x=tb2,y=df_DS01,by="Location",all.x=TRUE,all.y=TRUE)
+
+#unique(df_DS02$Location)[order(unique(df_DS02$Location))]
 # change column name of first column
 colnames(df_noch01)[1] <- "seqid"
 colnames(df_uiDSFI01)[1] <- "genus"
@@ -76,6 +247,7 @@ df_noch05.uiDSFI <- aggregate(df_noch05.uiDSFI[,sapply(df_noch05.uiDSFI,is.numer
 
 # count the number of rows in the dataframes
 nrow(df_noch03)
+colnames(df_noch03)
 nrow(df_nonoch03)
 # reshape data frame from wide to long
 df_noch04 <- reshape2::melt(df_noch03,id.vars = c("species"),value.name = "seqrd.cnt")
@@ -516,3 +688,539 @@ if(bSaveFigures==T){
                   #width=3*297,height=210,
                   units="mm",dpi=300)
 }
+
+
+#_______________________________________________________________________________
+
+# http://www.sthda.com/english/articles/36-classification-methods-essentials/146-discriminant-analysis-essentials-in-r/
+df_noch03$family <- df_p01$family[match(df_noch03$species, df_p01$species)]
+
+#
+df_noch03.1 <- df_noch03[, colSums(df_noch03 != 0) > 0]
+famnms <- df_noch03.1[,ncl3]
+#http://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/122-multidimensional-scaling-essentials-algorithms-and-r-code/
+# Load required packages
+library(magrittr)
+library(dplyr)
+library(ggpubr)
+# Cmpute MDS
+mds <- df_noch03.1 %>%
+  dist() %>%          
+  cmdscale() %>%
+  as_tibble()
+colnames(mds) <- c("Dim.1", "Dim.2")
+# Plot MDS
+ggscatter(mds, x = "Dim.1", y = "Dim.2", 
+          label = rownames(df_noch03.1),
+          size = 1,
+          repel = TRUE)
+#
+
+ncl3 <- ncol(df_noch03.1)
+df_noch03.2 <- df_noch03.1[ , c(ncl3, seq(2,ncl3-1))] 
+# https://stats.stackexchange.com/questions/121131/removing-collinear-variables-for-lda-qda-in-r
+# https://cran.r-project.org/web/packages/corrplot/vignettes/corrplot-intro.html
+library(corrplot)
+# make all numeric
+df_noch03.3 <- mutate_all(df_noch03.2, function(x) as.numeric(as.character(x)))
+df_noch03.3$family <- famnms
+df_noch03.3$family <- NULL
+# identify colinear variation
+CMX <- cor(df_noch03.3)
+corrplot(CMX, method = 'shade', order = 'AOE', diag = FALSE)
+corrplot(CMX, order = 'hclust', addrect = 2)
+corrplot(CMX, method = 'square', diag = FALSE, order = 'hclust',
+         addrect = 3, rect.col = 'blue', rect.lwd = 3, tl.pos = 'd')
+#
+testRes = cor.mtest(df_noch03.3, conf.level = 0.85)
+## specialized the insignificant value according to the significant level
+corrplot(CMX, p.mat = testRes$p, sig.level = 0.10, order = 'hclust', addrect = 2)
+## leave blank on non-significant coefficient
+## add significant correlation coefficients
+corrplot(CMX, p.mat = testRes$p, method = 'circle', type = 'lower', insig='blank',
+         addCoef.col ='black', number.cex = 0.8, order = 'AOE', diag=FALSE)
+
+m2 <- lda(family~., data = df_noch03.2)
+
+#f_DS02
+#http://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/122-multidimensional-scaling-essentials-algorithms-and-r-code/
+# Load required packages
+library(magrittr)
+library(dplyr)
+library(ggpubr)
+
+
+colnames(df_noch03)
+
+df_n04 <- as.data.frame(t(df_noch03))
+colnames(df_n04) <- df_n04[1,]
+df_n04 <- df_n04[-1,]
+# convert an entire data.frame to numeric
+#https://stackoverflow.com/questions/52909775/how-to-convert-an-entire-data-frame-to-numeric
+df_n04[] <- lapply(df_n04, as.numeric)
+df_n04[is.na(df_n04)] <- 0
+idnmb <- gsub("^(.*)_(.*)$","\\1",rownames(df_n04))
+DSFI_CONVcat.fl <- df_DS02$DSFI_CONV[match(idnmb,df_DS02$Sample_number)]
+# Cmpute MDS
+mds <- df_n04 %>%
+  dist() %>%          
+  cmdscale() %>%
+  as_tibble()
+colnames(mds) <- c("Dim.1", "Dim.2")
+# Plot MDS
+plmds <- ggscatter(mds, x = "Dim.1", y = "Dim.2", 
+          label = DSFI_CONVcat.fl,
+          shape=22,
+          fill=c(DSFI_CONVcat.fl),
+          size = 4,
+          repel = TRUE)
+
+#make filename to save plot to
+figname12 <- paste0("Fig07G_mds.png")
+#set variable to define if figures are to be saved
+bSaveFigures<-T
+#paste together path and file name
+figname12 <- paste(wd00,"/",figname12,sep="")
+# check if plot should be saved, and if TRUE , then save as '.png'
+if(bSaveFigures==T){
+  ggplot2::ggsave(plmds,file=figname12,
+                  width=210,height=297,
+                  #width=297,height=210,
+                  #width=3*297,height=210,
+                  units="mm",dpi=300)
+}
+
+#_______________________________________________________________________________
+#_______________________________________________________________________________
+#_______________________________________________________________________________
+#install.packages("BiodiversityR")
+if(!require(BiodiversityR)){
+  install.packages("BiodiversityR")
+  library(BiodiversityR)
+}
+if(!require(pvclust)){
+  install.packages('pvclust')
+  library(pvclust)
+}
+
+
+
+library(BiodiversityR)
+library(ggplot2)
+library(ggforce)
+# https://www.rdocumentation.org/packages/BiodiversityR/versions/2.14-2
+
+data(dune)
+str(dune)
+data(dune.env)
+summary(dune.env)
+attach(dune.env)
+
+
+# copy data frame
+df_n05 <- df_n04
+#rownames(df_n04)
+#only include when row name is not "family"
+df_n05$tmprwnm <- rownames(df_n05)
+df_n05 <- df_n05[df_n05$tmprwnm!="family",]
+#remove column
+df_n05$tmprwnm <- NULL
+# order the  data frame  by a column
+df_DS02.env<- df_DS02[order(df_DS02$Sample_number), ]
+# get the number of rows
+nRdfDS02.e <- nrow(df_DS02.env)
+# split sample number string by  '_' to get replicate numbers in a second column in a data frame
+dfrelpNmbs<- data.frame(do.call('rbind', strsplit(as.character(row.names(df_n05)),'_',fixed=TRUE)))[2]
+# get the unique elements in the first column and make them numeric
+relpNmbs<- as.numeric(unique(dfrelpNmbs[,1]))
+# get the highest replicate number
+mxRplN <- max(relpNmbs)
+# replicate rows n times  - see this question: https://stackoverflow.com/questions/8753531/repeat-rows-of-a-data-frame-n-times
+n <- mxRplN
+# repeat a sequence of numbers starting from 1 to the highest replicate number
+sq.rplNmb <- rep(seq(1,n,1),nRdfDS02.e)
+# order this sequence of numbers 
+o.sq.rplNmb <- sq.rplNmb[order(sq.rplNmb)]
+# repeat every row in the df_DS02.env data frame to equal the number of replicates
+df_DS02.env <- do.call("rbind", replicate(n, df_DS02.env, simplify = FALSE))
+# add back the PCR replicate number to the data frame
+df_DS02.env$pcrrplNmb <- o.sq.rplNmb
+# paste sample number and replicate number together
+df_DS02.env$Sample_number2 <- paste(df_DS02.env$Sample_number,"_",df_DS02.env$pcrrplNmb,sep="")
+#only include when row name is not "family"
+df_n05$tmprwnm <- rownames(df_n05)
+df_n05 <- df_n05[df_n05$tmprwnm!="family",]
+#remove column
+df_n05$tmprwnm <- NULL
+# get the row names for the NK samples
+rwnmNK<- rownames(df_n05)[grepl("NK",rownames(df_n05))]
+# get the number of NK rows
+nNKr <- length(rwnmNK)
+# get the number of ID rows in the df_DS02.env data frame
+nIDr <- nrow(df_DS02.env)
+# add this amount of empty rows with NA to the sample environment data frame 
+df_DS02.env[nrow(df_DS02.env)+nNKr,] <- NA
+# add the NK sample number names for the NK samples
+df_DS02.env$Sample_number2[(nIDr+1):(nIDr+nNKr)] <- rwnmNK
+df_DS02.env$Sample_number[(nIDr+1):(nIDr+nNKr)] <- rwnmNK
+# also add a location name for the NK samples
+df_DS02.env$Location[(nIDr+1):(nIDr+nNKr)] <- "NegCont"
+# the sample number 'ID042_2' is missing from the original 
+# OTU table, because of this it is not possible to match it in the
+# 'df_DS02.env' data frame. Because of this I remove this row
+# from this data frame
+df_DS02.env <- df_DS02.env[!df_DS02.env$Sample_number2=="ID042_2",]
+# it is the same problem for "NK01_2". There is no '"NK01_2"' sample in the  original 
+# OTU table, because of this it is not possible to match it in the
+# 'df_DS02.env' data frame. Because of this I remove this row
+# from this data frame
+df_DS02.env <- df_DS02.env[!df_DS02.env$Sample_number2=="NK01_2",]
+# count the number of rows in the 'df_DS02.env' data frame
+nrow(df_DS02.env)
+# find the sample numbers that are not included in the 'df_DS02.env' data frame 
+length(df_DS02.env$Sample_number2)
+length(unique(df_DS02.env$Sample_number2))
+# retain not duplicated rows - 
+# onøly considering duplicates for the 'Sample_number2'
+# column-  see: https://stackoverflow.com/questions/13967063/remove-duplicated-rows
+df_DS02.env <- df_DS02.env[!duplicated(df_DS02.env$Sample_number2), ]
+
+# check there is an equal number of rows in the two data frames
+# this is a requirement for the 'vegan::rda' function later on 
+nrow(df_DS02.env) == nrow(df_n05)
+
+
+# use this section here below to work out which parts are missing from the 
+# data frames
+notin_df_DS02.env <- setdiff(rownames(df_n05),df_DS02.env$Sample_number2)
+notin_df_n05 <- setdiff(df_DS02.env$Sample_number2,rownames(df_n05))
+# split sample number string by  '_' to get sample numbers in a first column in a data frame
+notin_df_DS02.env<- data.frame(do.call('rbind', strsplit(as.character(notin_df_DS02.env),'_',fixed=TRUE)))[1]
+#unique(notin_df_DS02.env[,1])
+
+# make the ordination model on the example data
+dune.Hellinger <- disttransform(dune, method='hellinger')
+Ordination.model1 <- rda(dune.Hellinger ~ Management, 
+                         data=dune.env, 
+                         scaling="species")
+summary(Ordination.model1)
+# make the ordination model on your own data
+df_n05.Hell <- disttransform(df_n05, method='hellinger')
+ordM1 <- rda(df_n05.Hell ~ Sample_number2, 
+             data=df_DS02.env, 
+             scaling="species")
+
+summary(ordM1)
+
+# Prepare to modify the ggplot theme
+BioR.theme <- ggplot2::theme(
+  panel.background = element_blank(),
+  panel.border = element_blank(),
+  panel.grid = element_blank(),
+  axis.line = element_line("gray25"),
+  text = element_text(size = 12),
+  axis.text = element_text(size = 10, colour = "gray25"),
+  axis.title = element_text(size = 14, colour = "gray25"),
+  legend.title = element_text(size = 14),
+  legend.text = element_text(size = 14),
+  legend.key = element_blank())
+
+# Use 'ordiplot' function on example data
+plot1 <- ordiplot(Ordination.model1, choices=c(1,2))
+# Use 'ordiplot' function on your own data
+plot1.e <- ordiplot(ordM1, choices=c(1,2))
+
+#make sites long on example data
+sites.long1 <- sites.long(plot1, env.data=dune.env)
+#make sites long on your own data
+sites.long1.e <- sites.long(plot1.e, env.data=df_DS02.env)
+head(sites.long1)
+head(sites.long1.e)
+# make axis long for the example data
+axis.long1 <- axis.long(Ordination.model1, choices=c(1, 2))
+axis.long1
+# make axis long for your own data
+axis.long1.e <- axis.long(ordM1, choices=c(1, 2))
+axis.long1.e
+
+# make plot 1 for the example data
+plotgg1 <- ggplot() + 
+  geom_vline(xintercept = c(0), color = "grey70", linetype = 2) +
+  geom_hline(yintercept = c(0), color = "grey70", linetype = 2) +  
+  xlab(axis.long1[1, "label"]) +
+  ylab(axis.long1[2, "label"]) +  
+  scale_x_continuous(sec.axis = dup_axis(labels=NULL, name=NULL)) +
+  scale_y_continuous(sec.axis = dup_axis(labels=NULL, name=NULL)) +
+  ggforce::geom_mark_ellipse(data=sites.long1, 
+                             aes(x=axis1, y=axis2, colour=Management, 
+                                 fill=after_scale(alpha(colour, 0.2))), 
+                             expand=0, size=0.2, show.legend=FALSE) +
+  geom_segment(data=centroids.long(sites.long1, grouping=Management), 
+               aes(x=axis1c, y=axis2c, xend=axis1, yend=axis2, colour=Management), 
+               size=1, show.legend=FALSE) +
+  geom_point(data=sites.long1, 
+             aes(x=axis1, y=axis2, colour=Management, shape=Management), 
+             size=5) +
+  BioR.theme +
+  ggsci::scale_colour_npg() +
+  coord_fixed(ratio=1)
+
+plotgg1
+
+
+
+# make the continuous character a category character
+sites.long1.e$DSFI_eDNA_water <- as.character(sites.long1.e$DSFI_eDNA_water)
+sites.long1.e$DVFI <- as.character(sites.long1.e$DVFI)
+# make plot 1 for your own data using DSFI_eDNA_water
+plotgg1.e <- ggplot() + 
+  geom_vline(xintercept = c(0), color = "grey70", linetype = 2) +
+  geom_hline(yintercept = c(0), color = "grey70", linetype = 2) +  
+  xlab(axis.long1[1, "label"]) +
+  ylab(axis.long1[2, "label"]) +  
+  scale_x_continuous(sec.axis = dup_axis(labels=NULL, name=NULL)) +
+  scale_y_continuous(sec.axis = dup_axis(labels=NULL, name=NULL)) +
+  ggforce::geom_mark_ellipse(data=sites.long1.e, 
+                             aes(x=axis1, y=axis2, colour=DSFI_eDNA_water, 
+                                 fill=after_scale(alpha(colour, 0.2))), 
+                             expand=0, size=0.2, show.legend=FALSE) +
+  # geom_segment(data=centroids.long(sites.long1.e, grouping=DSFI_eDNA_water),
+  #              aes(x=axis1c, y=axis2c, xend=axis1, yend=axis2, colour=DSFI_eDNA_water),
+  #              size=1, show.legend=FALSE) +
+  geom_point(data=sites.long1.e, 
+             aes(x=axis1, y=axis2, colour=DSFI_eDNA_water), 
+             size=5) +
+  BioR.theme +
+  ggsci::scale_colour_npg() +
+  coord_fixed(ratio=1)
+
+plotgg1.e
+
+#make filename to save plot to
+figname13 <- paste0("Fig08A_RDA.png")
+#set variable to define if figures are to be saved
+bSaveFigures<-T
+#paste together path and file name
+figname13 <- paste(wd00,"/",figname13,sep="")
+# check if plot should be saved, and if TRUE , then save as '.png'
+if(bSaveFigures==T){
+  ggplot2::ggsave(plotgg1.e,file=figname13,
+                  width=210,height=297,
+                  #width=297,height=210,
+                  #width=3*297,height=210,
+                  units="mm",dpi=300)
+}
+
+# make plot 1 for your own data using DVFI
+sites.long1.e$DVFI <- as.character(sites.long1.e$DVFI)
+# make plot 1 for the example data
+plotgg1.e <- ggplot() + 
+  geom_vline(xintercept = c(0), color = "grey70", linetype = 2) +
+  geom_hline(yintercept = c(0), color = "grey70", linetype = 2) +  
+  xlab(axis.long1[1, "label"]) +
+  ylab(axis.long1[2, "label"]) +  
+  scale_x_continuous(sec.axis = dup_axis(labels=NULL, name=NULL)) +
+  scale_y_continuous(sec.axis = dup_axis(labels=NULL, name=NULL)) +
+  ggforce::geom_mark_ellipse(data=sites.long1.e, 
+                             aes(x=axis1, y=axis2, colour=DVFI, 
+                                 fill=after_scale(alpha(colour, 0.2))), 
+                             expand=0, size=0.2, show.legend=FALSE) +
+  # geom_segment(data=centroids.long(sites.long1.e, grouping=DVFI),
+  #              aes(x=axis1c, y=axis2c, xend=axis1, yend=axis2, colour=DVFI),
+  #              size=1, show.legend=FALSE) +
+  geom_point(data=sites.long1.e, 
+             aes(x=axis1, y=axis2, colour=DVFI), 
+             size=5) +
+  BioR.theme +
+  ggsci::scale_colour_npg() +
+  coord_fixed(ratio=1)
+
+plotgg1.e
+
+
+#make filename to save plot to
+figname13 <- paste0("Fig08B_RDA.png")
+#set variable to define if figures are to be saved
+bSaveFigures<-T
+#paste together path and file name
+figname13 <- paste(wd00,"/",figname13,sep="")
+# check if plot should be saved, and if TRUE , then save as '.png'
+if(bSaveFigures==T){
+  ggplot2::ggsave(plotgg1.e,file=figname13,
+                  width=210,height=297,
+                  #width=297,height=210,
+                  #width=3*297,height=210,
+                  units="mm",dpi=300)
+}
+
+# make plot 1 for your own data using DSFI_CONV
+sites.long1.e$DSFI_CONV <- as.character(sites.long1.e$DSFI_CONV)
+# make plot 1 for the example data
+plotgg1.e <- ggplot() + 
+  geom_vline(xintercept = c(0), color = "grey70", linetype = 2) +
+  geom_hline(yintercept = c(0), color = "grey70", linetype = 2) +  
+  xlab(axis.long1[1, "label"]) +
+  ylab(axis.long1[2, "label"]) +  
+  scale_x_continuous(sec.axis = dup_axis(labels=NULL, name=NULL)) +
+  scale_y_continuous(sec.axis = dup_axis(labels=NULL, name=NULL)) +
+  ggforce::geom_mark_ellipse(data=sites.long1.e, 
+                             aes(x=axis1, y=axis2, colour=DSFI_CONV, 
+                                 fill=after_scale(alpha(colour, 0.2))), 
+                             expand=0, size=0.2, show.legend=FALSE) +
+  # geom_segment(data=centroids.long(sites.long1.e, grouping=DSFI_CONV),
+  #              aes(x=axis1c, y=axis2c, xend=axis1, yend=axis2, colour=DSFI_CONV),
+  #              size=1, show.legend=FALSE) +
+  geom_point(data=sites.long1.e, 
+             aes(x=axis1, y=axis2, colour=DSFI_CONV), 
+             size=5) +
+  BioR.theme +
+  ggsci::scale_colour_npg() +
+  coord_fixed(ratio=1)
+
+plotgg1.e
+
+
+#make filename to save plot to
+figname13 <- paste0("Fig08C_RDA.png")
+#set variable to define if figures are to be saved
+bSaveFigures<-T
+#paste together path and file name
+figname13 <- paste(wd00,"/",figname13,sep="")
+# check if plot should be saved, and if TRUE , then save as '.png'
+if(bSaveFigures==T){
+  ggplot2::ggsave(plotgg1.e,file=figname13,
+                  width=210,height=297,
+                  #width=297,height=210,
+                  #width=3*297,height=210,
+                  units="mm",dpi=300)
+}
+
+# Example 2: Confidence ellipses for categorical variables
+
+plot1 <- ordiplot(Ordination.model1, choices=c(1,2))
+Management.ellipses <- ordiellipse(plot1, 
+                                   groups=Management, 
+                                   display="sites", 
+                                   kind="sd")
+
+Management.ellipses.long1 <- ordiellipse.long(Management.ellipses,
+                                              grouping.name="Management")
+# Generate the plot
+plotgg2 <- ggplot() + 
+  geom_vline(xintercept = c(0), color = "grey70", linetype = 2) +
+  geom_hline(yintercept = c(0), color = "grey70", linetype = 2) +  
+  xlab(axis.long1[1, "label"]) +
+  ylab(axis.long1[2, "label"]) +  
+  scale_x_continuous(sec.axis = dup_axis(labels=NULL, name=NULL)) +
+  scale_y_continuous(sec.axis = dup_axis(labels=NULL, name=NULL)) +
+  geom_polygon(data=Management.ellipses.long1, 
+               aes(x=axis1, y=axis2, 
+                   colour=Management, 
+                   fill=after_scale(alpha(colour, 0.2))), 
+               size=0.2, show.legend=FALSE) +
+  geom_segment(data=centroids.long(sites.long1, 
+                                   grouping=Management), 
+               aes(x=axis1c, y=axis2c, xend=axis1, yend=axis2, 
+                   colour=Management), 
+               size=1, show.legend=FALSE) +
+  geom_point(data=sites.long1, 
+             aes(x=axis1, y=axis2, colour=Management, shape=Management), 
+             size=5) +
+  BioR.theme +
+  ggsci::scale_colour_npg() +
+  coord_fixed(ratio=1)
+
+plotgg2
+
+# 
+# Example 3: Smooth surfaces for continuous variables
+# Extract the data
+A1.surface <- ordisurf(plot1, y=A1)
+A1.grid <- ordisurfgrid.long(A1.surface)
+# Generate the plot
+plotgg3 <- ggplot() + 
+  geom_contour_filled(data=A1.grid, 
+                      aes(x=x, y=y, z=z)) +
+  geom_vline(xintercept = c(0), color = "grey70", linetype = 2) +
+  geom_hline(yintercept = c(0), color = "grey70", linetype = 2) +  
+  xlab(axis.long1[1, "label"]) +
+  ylab(axis.long1[2, "label"]) +  
+  scale_x_continuous(sec.axis = dup_axis(labels=NULL, name=NULL)) +
+  scale_y_continuous(sec.axis = dup_axis(labels=NULL, name=NULL)) +
+  geom_point(data=sites.long1, 
+             aes(x=axis1, y=axis2, shape=Management), 
+             colour="red", size=4) +
+  BioR.theme +
+  scale_fill_viridis_d() +
+  labs(fill="A1") +
+  coord_fixed(ratio=1)
+
+plotgg3
+# 
+# Example 4: Add information from pvclust to ordination diagrams
+# Extract the data
+library(pvclust)
+dune.pv <- pvclust(t(dune.Hellinger), 
+                   method.hclust="mcquitty",
+                   method.dist="euclidean",
+                   nboot=1000)
+
+plot1 <- ordiplot(Ordination.model1, choices=c(1,2), scaling='species')
+cl.data1 <- ordicluster(plot1, 
+                        cluster=as.hclust(dune.pv$hclust))
+
+
+pvlong <- pvclust.long(dune.pv, cl.data1)
+# Generate the plot
+
+plotgg4 <- ggplot() + 
+  geom_vline(xintercept = c(0), color = "grey70", linetype = 2) +
+  geom_hline(yintercept = c(0), color = "grey70", linetype = 2) +  
+  xlab(axis.long1[1, "label"]) +
+  ylab(axis.long1[2, "label"]) +  
+  scale_x_continuous(sec.axis = dup_axis(labels=NULL, name=NULL)) +
+  scale_y_continuous(sec.axis = dup_axis(labels=NULL, name=NULL)) +
+  geom_segment(data=subset(pvlong$segments, 
+                           pvlong$segments$prune > 3),
+               aes(x=x1, y=y1, xend=x2, yend=y2, 
+                   colour=au>=0.89, 
+                   size=au),
+               show.legend=TRUE) +
+  geom_point(data=subset(pvlong$nodes, 
+                         pvlong$nodes$prune > 3), 
+             aes(x=x, y=y, 
+                 fill=au>=0.89), 
+             shape=21, size=2, colour="black") +
+  geom_point(data=sites.long1, 
+             aes(x=axis1, y=axis2, shape=Management), 
+             colour="darkolivegreen4", alpha=0.9, size=5) +
+  geom_text(data=sites.long1,
+            aes(x=axis1, y=axis2, label=labels)) +
+  BioR.theme +
+  ggsci::scale_colour_npg() +
+  scale_size(range=c(0.3, 2)) +
+  scale_shape_manual(values=c(15, 16, 17, 18)) +
+  guides(shape = guide_legend(override.aes = list(linetype = 0))) +
+  coord_fixed(ratio=1)
+
+plotgg4
+# 
+# #_______________________________________________________________________________
+# Ordination.model1 <- BiodiversityR::CAPdiscrim(reads~habitat.x,samples,
+#                                 dist="bray", axes=2, m=0, add=FALSE)
+# Ordination.model1
+# plot1 <- ordiplot(Ordination.model1, type="none")
+# #ordisymbol(plot1, samples, "habitat.x", col = colvec[samples$habitat],pchs=FALSE,legend=FALSE)
+# ordihull(Ordination.model1,groups=samples$habitat,
+#          display="sites",col=colvec,alpha=100,draw="polygon",border=colvec)
+# plot(seq(1:14), rep(-1000, 14), xlim=c(1, 14), ylim=c(0, 100), xlab="m",
+#      ylab="classification success (percent)", type="n")
+# for (mseq in 1:14) {
+#   CAPdiscrim.result <- CAPdiscrim(reads~habitat.x,samples,
+#                                   dist="bray", axes=2, m=mseq)
+#   points(mseq, CAPdiscrim.result$percent)
+# }
+# }
+# 
+# #Håber, det kan bruges :-) Funktionen CAPdiscrim er fra pakken BiodiversityR.
+
