@@ -1260,7 +1260,165 @@ for (mseq in 1:14) {
                                   dist="bray", axes=2, m=mseq)
   points(mseq, CAPdiscrim.result$percent)
 }
-}
+#}
 
 #Håber, det kan bruges :-) Funktionen CAPdiscrim er fra pakken BiodiversityR.
+
+#_______________________________________________________________________________
+
+# Make linear discriminant analysis
+#_______________________________________________________________________________
+#https://github.com/Statology/R-Guides/blob/main/linear_discriminant_analysis
+#LOAD NECESSARY LIBRARIES
+library(ggplot2)
+library(MASS)
+#FIT LDA MODEL 
+# copy the data frame
+df_n06 <- df_n05
+#Match DVFI category to data frame
+df_n06$DVFIcat <- df_DS02.env$DVFI[match(df_DS02.env$Sample_number2,row.names(df_n05))]
+# for the missing DVFI categories assign zero
+df_n06$DVFIcat[is.na(df_n06$DVFIcat)] <- 0
+# make the DVFI categories  characters
+df_n06$DVFIcat <- as.character(df_n06$DVFIcat)
+# make the LDA model
+m2 <- MASS::lda(DVFIcat ~ ., 
+                data=df_n06)
+#USE MODEL TO MAKE PREDICTIONS
+pre2 <-predict(m2,df_n06)
+mean(pre2$class==df_n06$DVFIcat)
+#VISUALIZE LINEAR DISCRIMINANTS
+lda_pl2 <- cbind(df_n06, predict(m2)$x)
+# make  the plot
+ldap01 <- ggplot(lda_pl2, aes(LD1, LD2)) +
+  geom_point(aes(color = DVFIcat))
+# change color of points
+ldap01 <- ldap01 + scale_colour_brewer(palette="Dark2")
+#ldap01
+# plot with the two other LD axis
+ldap02 <- ggplot(lda_pl2, aes(LD1, LD3)) +
+  geom_point(aes(color = DVFIcat))
+# change color of points
+#https://statisticsglobe.com/scale-colour-fill-brewer-rcolorbrewer-package-r
+ldap02 <- ldap02 + scale_colour_brewer(palette="Spectral")
+ldap02 <- ldap02 + scale_colour_brewer(palette="Dark2")
+#ldap02
+
+# Add titles
+# see this example: https://www.datanovia.com/en/blog/ggplot-title-subtitle-and-caption/
+#caption = "Data source: ToothGrowth")
+ldap01t <- ldap01 + labs(title = "a")#,
+# Add titles
+# p06t <- p06 + labs(title = "eDNA samples attempted",
+#                    subtitle = "at least approv controls and 1 or 2 pos repl")#,
+ldap02t <- ldap02 + labs(title = "b")#,
+# ------------- plot Combined figure -------------
+library(patchwork)
+# set a variable to TRUE to determine whether to save figures
+bSaveFigures <- T
+#see this website: https://www.rdocumentation.org/packages/patchwork/versions/1.0.0
+# on how to arrange plots in patchwork
+clplot2 <-  ldap01t +
+  ldap02t +
+  
+  plot_layout(nrow=2,byrow=T) + #xlab(xlabel) +
+  plot_layout(guides = "collect") #+
+  #plot_annotation(caption=inpf01) #& theme(legend.position = "bottom")
+#p
+
+#make filename to save plot to
+figname14 <- paste0("Fig09A_LDA.png")
+#set variable to define if figures are to be saved
+bSaveFigures<-T
+#paste together path and file name
+figname14 <- paste(wd00,"/",figname14,sep="")
+# check if plot should be saved, and if TRUE , then save as '.png'
+if(bSaveFigures==T){
+  ggplot2::ggsave(clplot2,file=figname14,
+                  width=210,height=297,
+                  #width=297,height=210,
+                  #width=3*297,height=210,
+                  units="mm",dpi=300)
+}
+
+#_______________________________________________________________________________
+
+#_______________________________________________________________________________
+
+# Make linear discriminant analysis
+# But this time without zero DVFI categories
+#_______________________________________________________________________________
+#https://github.com/Statology/R-Guides/blob/main/linear_discriminant_analysis
+#LOAD NECESSARY LIBRARIES
+library(ggplot2)
+library(MASS)
+#FIT LDA MODEL 
+# copy the data frame
+df_n06 <- df_n05
+#Match DVFI category to data frame
+df_n06$DVFIcat <- df_DS02.env$DVFI[match(df_DS02.env$Sample_number2,row.names(df_n05))]
+# for the missing DVFI categories assign zero
+df_n06$DVFIcat[is.na(df_n06$DVFIcat)] <- 0
+df_n06 <- df_n06[df_n06$DVFIcat!=0,]
+# make the DVFI categories  characters
+df_n06$DVFIcat <- as.character(df_n06$DVFIcat)
+# make the LDA model
+m2 <- MASS::lda(DVFIcat ~ ., 
+                data=df_n06)
+#USE MODEL TO MAKE PREDICTIONS
+pre2 <-predict(m2,df_n06)
+mean(pre2$class==df_n06$DVFIcat)
+#VISUALIZE LINEAR DISCRIMINANTS
+lda_pl2 <- cbind(df_n06, predict(m2)$x)
+# make  the plot
+ldap01 <- ggplot(lda_pl2, aes(LD1, LD2)) +
+  geom_point(aes(color = DVFIcat))
+# change color of points
+ldap01 <- ldap01 + scale_colour_brewer(palette="Dark2")
+#ldap01
+# plot with the two other LD axis
+ldap02 <- ggplot(lda_pl2, aes(LD1, LD3)) +
+  geom_point(aes(color = DVFIcat))
+# change color of points
+#https://statisticsglobe.com/scale-colour-fill-brewer-rcolorbrewer-package-r
+ldap02 <- ldap02 + scale_colour_brewer(palette="Spectral")
+ldap02 <- ldap02 + scale_colour_brewer(palette="Dark2")
+#ldap02
+
+# Add titles
+# see this example: https://www.datanovia.com/en/blog/ggplot-title-subtitle-and-caption/
+#caption = "Data source: ToothGrowth")
+ldap01t <- ldap01 + labs(title = "a")#,
+# Add titles
+# p06t <- p06 + labs(title = "eDNA samples attempted",
+#                    subtitle = "at least approv controls and 1 or 2 pos repl")#,
+ldap02t <- ldap02 + labs(title = "b")#,
+# ------------- plot Combined figure -------------
+library(patchwork)
+# set a variable to TRUE to determine whether to save figures
+bSaveFigures <- T
+#see this website: https://www.rdocumentation.org/packages/patchwork/versions/1.0.0
+# on how to arrange plots in patchwork
+clplot2 <-  ldap01t +
+  ldap02t +
+  
+  plot_layout(nrow=2,byrow=T) + #xlab(xlabel) +
+  plot_layout(guides = "collect") #+
+#plot_annotation(caption=inpf01) #& theme(legend.position = "bottom")
+#p
+
+#make filename to save plot to
+figname14 <- paste0("Fig09B_LDA_nozeroDVFIcat.png")
+#set variable to define if figures are to be saved
+bSaveFigures<-T
+#paste together path and file name
+figname14 <- paste(wd00,"/",figname14,sep="")
+# check if plot should be saved, and if TRUE , then save as '.png'
+if(bSaveFigures==T){
+  ggplot2::ggsave(clplot2,file=figname14,
+                  width=210,height=297,
+                  #width=297,height=210,
+                  #width=3*297,height=210,
+                  units="mm",dpi=300)
+}
 
